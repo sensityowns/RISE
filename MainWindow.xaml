@@ -1,0 +1,73 @@
+<Window x:Class="Rise.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RISE" Width="1260" Height="820" MinWidth="1000" MinHeight="680"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource WindowBrush}"
+        Foreground="#FFF1F1F2" FontFamily="Segoe UI" Icon="{StaticResource RiseIcon}" Opacity="0">
+    <Window.Resources>
+        <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="13,11"/>
+            <Setter Property="Margin" Value="0,2"/>
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="AppRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="226"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Background="#FF141519" BorderBrush="#FF24262B" BorderThickness="0,0,1,0">
+            <DockPanel Margin="16,18">
+                <StackPanel DockPanel.Dock="Top">
+                    <StackPanel Orientation="Horizontal" Margin="6,5,0,28">
+                        <Border Width="38" Height="38" Background="#FFFF762E" CornerRadius="11">
+                            <TextBlock Text="R" Foreground="#FF111114" FontSize="26" FontWeight="Black"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="RISE" FontSize="19" FontWeight="Bold"/>
+                            <TextBlock Text="PERFORMANCE SUITE" FontSize="9" Foreground="{StaticResource MutedBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="WORKSPACE" FontSize="10" Foreground="{StaticResource MutedBrush}" Margin="10,0,0,10"/>
+                    <StackPanel x:Name="Navigation"/>
+                </StackPanel>
+                <Border DockPanel.Dock="Bottom" Background="#FF1B1C21" BorderBrush="#FF2B2D34" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,18,0,4">
+                    <StackPanel>
+                        <TextBlock Text="RISE PRO" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                        <TextBlock Text="Explore account features on the official site." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,7,0,11"/>
+                        <Button Content="Visit RISE website" Click="Website_Click"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" BorderBrush="#FF24262B" BorderThickness="0,0,0,1">
+                <DockPanel Margin="27,0">
+                    <TextBlock x:Name="PageTitle" Text="Home" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                        <Ellipse Width="8" Height="8" Fill="#FF56C68B" Margin="0,0,8,0"/>
+                        <TextBlock Text="SYSTEM READY" FontSize="10" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <ContentControl x:Name="PageHost" Grid.Row="1"/>
+            <Grid x:Name="Splash" Grid.RowSpan="2" Background="#FF101114">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Border Width="84" Height="84" CornerRadius="25" Background="{StaticResource AccentBrush}" HorizontalAlignment="Center">
+                        <TextBlock Text="R" Foreground="#FF111114" FontSize="58" FontWeight="Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="RISE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,18,0,4"/>
+                    <TextBlock Text="PERFORMANCE SUITE" FontSize="10" Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center"/>
+                    <ProgressBar Width="120" Height="3" IsIndeterminate="True" Foreground="{StaticResource AccentBrush}" Background="#FF292B31" BorderThickness="0" Margin="0,24,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

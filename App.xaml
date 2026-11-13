@@ -1,0 +1,59 @@
+<Application x:Class="Rise.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <DrawingImage x:Key="RiseIcon">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#FFFF762E">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry Rect="0,0,64,64" RadiusX="14" RadiusY="14"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF111114" Geometry="M18,12 L39,12 C51,12 57,18 57,28 C57,35 53,40 46,42 L58,53 L43,53 L33,43 L29,43 L29,53 L18,53 Z"/>
+                    <GeometryDrawing Brush="#FFFF762E" Geometry="M29,21 L29,34 L39,34 C44,34 47,32 47,27 C47,23 44,21 39,21 Z"/>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <Color x:Key="AccentColor">#FFFF762E</Color>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+        <SolidColorBrush x:Key="WindowBrush" Color="#FF101114"/>
+        <SolidColorBrush x:Key="PanelBrush" Color="#FF181A1F"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#FF292B31"/>
+        <SolidColorBrush x:Key="MutedBrush" Color="#FF9B9EA7"/>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="#FFF5F5F6"/>
+            <Setter Property="Background" Value="#FF25272D"/>
+            <Setter Property="BorderBrush" Value="#FF33353D"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="#FF111114"/>
+        </Style>
+    </Application.Resources>
+</Application>
