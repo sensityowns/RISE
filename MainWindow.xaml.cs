@@ -29,6 +29,7 @@ public partial class MainWindow : Window
     private readonly TweakService _tweakService = new();
     private readonly GameCatalog _gameCatalog = new();
     private readonly SettingsService _settingsService = new();
+    private readonly StartupManagerService _startupManagerService = new();
     private readonly DispatcherTimer _refreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private AppSettings _settings;
     private SystemSnapshot? _snapshot;
@@ -50,6 +51,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _settings = _settingsService.Load();
+        var appVersion = GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0";
+        Title = $"RISE · FREE · v{appVersion}";
         ApplyAccent(_settings.Accent);
         _gameCatalog.Detect();
         foreach (var game in GameCatalog.Games)
@@ -111,6 +114,7 @@ public partial class MainWindow : Window
             "Debloat" => BuildDebloat(),
             "Tools" => BuildTools(),
             "Settings" => BuildSettings(),
+            "Startup Manager" => BuildStartupManager(),
             _ => BuildHome()
         };
         if (_initialAnimationFinished && _settings.AnimationsEnabled)
@@ -145,7 +149,7 @@ public partial class MainWindow : Window
         _homeDetails.Clear();
         _homeBars.Clear();
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Your system, at a glance.", "Live readings from Windows. Values refresh automatically."));
+        page.Children.Add(WelcomeBlock("Your system, at a glance.", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0"} · Live readings from Windows."));
 
         var overview = new UniformGrid { Columns = 4, Margin = new Thickness(0, 0, 0, 16) };
         overview.Children.Add(CreateMetricCard("PROCESSOR", _snapshot.Cpu, $"{_snapshot.CpuPercent:0}% system use", _snapshot.CpuPercent / 100));
@@ -174,6 +178,11 @@ public partial class MainWindow : Window
         quick.Children.Add(ActionButton("Discord community & support", () => OpenUrl("https://discord.com/invite/qfqhJRv8m")));
         details.Children.Add(Card("GET STARTED", quick, new Thickness(8, 0, 0, 0)));
         page.Children.Add(details);
+        var membership = new StackPanel();
+        membership.Children.Add(new TextBlock { Text = "RISE FREE", FontSize = 15, FontWeight = FontWeights.SemiBold });
+        membership.Children.Add(Body($"{TweakService.Definitions.Count} implemented user-level tweaks are available in this build. Pro accounts and entitlement verification are not implemented in the desktop app.", 12));
+        membership.Children.Add(ActionButton("Visit official RISE website", () => OpenUrl("https://risetweaks.netlify.app/"), accent: true, margin: new Thickness(0, 10, 0, 0)));
+        page.Children.Add(Card("EDITION & FEATURES", membership, new Thickness(0, 10, 0, 0)));
         return ScrollPage(page);
     }
 
@@ -383,6 +392,7 @@ public partial class MainWindow : Window
         var page = NewPage();
         page.Children.Add(WelcomeBlock("Tools", "Windows-native tools and RISE-managed backups. Destructive cleanup is limited to old files directly inside your user temporary folder."));
         page.Children.Add(ActionButton("Clean user temporary files older than 7 days", CleanTempFiles, accent: true, margin: new Thickness(0, 0, 0, 8)));
+        page.Children.Add(ActionButton("Manage current-user startup apps", () => ShowPage("Startup Manager"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(ActionButton("Open Windows startup apps", () => OpenUrl("ms-settings:startupapps"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(ActionButton("View installed apps", () => ShowPage("Debloat"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(ActionButton("Open Windows recovery / repair settings", () => OpenUrl("ms-settings:recovery"), margin: new Thickness(0, 0, 0, 8)));
@@ -393,10 +403,67 @@ public partial class MainWindow : Window
         return ScrollPage(page);
     }
 
+    private UIElement BuildStartupManager()
+    {
+        var page = NewPage();
+        page.Children.Add(WelcomeBlock("Startup manager", "Review apps registered to run at sign-in for your Windows user. Disable moves an entry into RISE's reversible backup key; restore puts it back. No administrator access is required."));
+        page.Children.Add(Body("This view manages only the current user's registry Run entries. Startup folders, scheduled tasks, and entries registered for all users are not changed here. Review each command before disabling it.", 12));
+        page.Children.Add(ActionButton("Refresh entries", () => ShowPage("Startup Manager"), margin: new Thickness(0, 10, 0, 10)));
+        try
+        {
+            var entries = _startupManagerService.GetEntries();
+            if (entries.Count == 0)
+                page.Children.Add(Body("No current-user startup entries were found.", 12));
+
+            foreach (var entry in entries)
+            {
+                var details = new StackPanel();
+                details.Children.Add(new TextBlock { Text = entry.Name, FontSize = 14, FontWeight = FontWeights.SemiBold });
+                details.Children.Add(Body(entry.Command, 11));
+                var panel = new DockPanel();
+                panel.Children.Add(details);
+                var action = entry.Name.Equals("RISE", StringComparison.OrdinalIgnoreCase)
+                    ? ActionButton("Manage in Settings", () => ShowPage("Settings"), margin: new Thickness(8, 0, 0, 0))
+                    : ActionButton(entry.Enabled ? "Disable" : "Restore",
+                        () => ChangeStartupEntry(entry, !entry.Enabled),
+                        accent: entry.Enabled,
+                        margin: new Thickness(8, 0, 0, 0));
+                DockPanel.SetDock(action, Dock.Right);
+                panel.Children.Add(action);
+                page.Children.Add(Card(entry.Enabled ? "ENABLED" : "DISABLED · BACKUP SAVED", panel, new Thickness(0, 4, 0, 4)));
+            }
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException)
+        {
+            page.Children.Add(Body($"RISE could not read startup entries: {ex.Message}", 12));
+        }
+        return ScrollPage(page);
+    }
+
+    private void ChangeStartupEntry(StartupEntry entry, bool enabled)
+    {
+        var action = enabled ? "restore" : "disable";
+        if (MessageBox.Show(
+                $"{action} “{entry.Name}” at sign-in?\n\nCommand:\n{entry.Command}\n\nRISE will move this value between current-user registry keys without deleting it.",
+                "Confirm startup change",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+        try
+        {
+            _startupManagerService.SetEnabled(entry, enabled);
+            AppendActivity($"{(enabled ? "Restored" : "Disabled")} current-user startup entry: {entry.Name}.");
+            ShowPage("Startup Manager");
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException or InvalidOperationException)
+        {
+            MessageBox.Show($"RISE could not update this startup entry.\n\n{ex.Message}", "Startup change failed", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
     private UIElement BuildSettings()
     {
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Settings & support", "RISE settings are stored under your local app data. RISE Pro sign-in and purchase links always open the official website."));
+        page.Children.Add(WelcomeBlock("Settings & support", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0"} · Settings are stored under your local app data."));
 
         var accentPanel = new StackPanel();
         accentPanel.Children.Add(new TextBlock { Text = "Accent colour", FontWeight = FontWeights.SemiBold });
@@ -428,6 +495,7 @@ public partial class MainWindow : Window
         page.Children.Add(Card("APPLICATION", startupPanel, new Thickness(0, 0, 0, 8)));
 
         page.Children.Add(ActionButton("Sign in / Get RISE Pro · official website", () => OpenUrl("https://risetweaks.netlify.app/"), accent: true, margin: new Thickness(0, 0, 0, 8)));
+        page.Children.Add(Body("RISE does not currently have desktop authentication or a subscription-verification backend. The app cannot verify or grant Pro entitlements.", 12));
         page.Children.Add(ActionButton("Discord support & community", () => OpenUrl("https://discord.com/invite/qfqhJRv8m"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(ActionButton("Official website", () => OpenUrl("https://risetweaks.netlify.app/"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(Body($"RISE version {GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0"} · no password or account data is stored locally.", 12));

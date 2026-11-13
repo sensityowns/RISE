@@ -8,6 +8,6 @@
     <AssemblyName>RISE</AssemblyName>
     <RootNamespace>Rise</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible problem in RISE
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include passwords, license keys, personal data, or unredacted logs."
+  - type: input
+    id: version
+    attributes:
+      label: RISE version
+      placeholder: "For example, 0.2.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and build
+      placeholder: "For example, Windows 11, build 26100"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the steps that reliably reproduce the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant redacted logs
+      description: Remove usernames, local paths, tokens, and other personal or sensitive information.
+    validations:
+      required: false
