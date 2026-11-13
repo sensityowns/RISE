@@ -1,0 +1,40 @@
+name: Windows build
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build
+        run: dotnet build RISE.csproj --configuration Release
+      - name: Publish self-contained Windows app
+        shell: pwsh
+        run: |
+          $publish = Join-Path $env:RUNNER_TEMP 'RISE\publish'
+          $release = Join-Path $env:RUNNER_TEMP 'RISE\RISE-win-x64.zip'
+          New-Item -ItemType Directory -Force -Path $publish | Out-Null
+          dotnet publish RISE.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false --output $publish
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Compress-Archive -Path (Join-Path $publish 'RISE.exe'), (Join-Path $env:GITHUB_WORKSPACE 'README.md') -DestinationPath $release -CompressionLevel Optimal
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RISE-win-x64
+          path: ${{ runner.temp }}\RISE\RISE-win-x64.zip
+          if-no-files-found: error
+          retention-days: 14
