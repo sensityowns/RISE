@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- Add the supplied 226-entry tweak catalog with Free/Premium, category, risk, and requirement details plus search and filters.
+- Enable only validated Low-risk Free current-user registry toggles in Release; unsupported shell, service, administrator-level, network, adapter, and power actions remain unavailable.
+- Add confirmed Apply All and restore flows that preserve original registry value types.
+- Add a Debug-only local catalog editor for development. It is not owner authentication or a secure Premium entitlement.
+
 ## 0.4.0
 
 - Replace the app's lettermark with an orange and black angular peak mark based on the provided logo.

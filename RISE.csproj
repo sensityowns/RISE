@@ -8,6 +8,9 @@
     <AssemblyName>RISE</AssemblyName>
     <RootNamespace>Rise</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>0.4.0</Version>
+    <Version>0.5.0</Version>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Assets\Tweaks.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

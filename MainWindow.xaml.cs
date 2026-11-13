@@ -51,7 +51,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _settings = _settingsService.Load();
-        var appVersion = GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0";
+        var appVersion = GetType().Assembly.GetName().Version?.ToString(3) ?? "0.5.0";
         Title = $"RISE · FREE · v{appVersion}";
         ApplyAccent(_settings.Accent);
         _gameCatalog.Detect();
@@ -61,7 +61,9 @@ public partial class MainWindow : Window
                 GameCatalog.SetExecutable(game, savedPath);
         }
 
-        foreach (var item in NavigationItems)
+        foreach (var item in TweakService.IsDeveloperBuild
+                     ? NavigationItems.Append("Developer")
+                     : NavigationItems)
         {
             var button = new Button { Content = item, Style = (Style)FindResource("NavButton"), Tag = item };
             button.Click += (_, _) => ShowPage(item);
@@ -115,6 +117,7 @@ public partial class MainWindow : Window
             "Tools" => BuildTools(),
             "Settings" => BuildSettings(),
             "Startup Manager" => BuildStartupManager(),
+            "Developer" => BuildDeveloperTools(),
             _ => BuildHome()
         };
         if (_initialAnimationFinished && _settings.AnimationsEnabled)
@@ -149,7 +152,7 @@ public partial class MainWindow : Window
         _homeDetails.Clear();
         _homeBars.Clear();
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Your system, at a glance.", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0"} · Live readings from Windows."));
+        page.Children.Add(WelcomeBlock("Your system, at a glance.", $"RISE FREE · {_tweakService.SupportedFreeCount} supported tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.5.0"} · Live readings from Windows."));
 
         var overview = new UniformGrid { Columns = 4, Margin = new Thickness(0, 0, 0, 16) };
         overview.Children.Add(CreateMetricCard("PROCESSOR", _snapshot.Cpu, $"{_snapshot.CpuPercent:0}% system use", _snapshot.CpuPercent / 100));
@@ -180,7 +183,7 @@ public partial class MainWindow : Window
         page.Children.Add(details);
         var membership = new StackPanel();
         membership.Children.Add(new TextBlock { Text = "RISE FREE", FontSize = 15, FontWeight = FontWeights.SemiBold });
-        membership.Children.Add(Body($"{TweakService.Definitions.Count} implemented user-level tweaks are available in this build. Pro accounts and entitlement verification are not implemented in the desktop app.", 12));
+        membership.Children.Add(Body($"{_tweakService.SupportedFreeCount} low-risk Free tweaks are currently actionable from the {_tweakService.Definitions.Count}-entry catalog. Higher-risk, administrator-level, shell, service, network, and power actions remain unavailable. Premium actions are not account-verified; this app has no authenticated Pro or owner entitlement system.", 12));
         membership.Children.Add(ActionButton("Visit official RISE website", () => OpenUrl("https://risetweaks.netlify.app/"), accent: true, margin: new Thickness(0, 10, 0, 0)));
         page.Children.Add(Card("EDITION & FEATURES", membership, new Thickness(0, 10, 0, 0)));
         return ScrollPage(page);
@@ -189,13 +192,21 @@ public partial class MainWindow : Window
     private UIElement BuildOptimisation()
     {
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Optimisation", "Choose changes deliberately. Each item lists its effect and tradeoff; every listed tweak can be restored."));
-        page.Children.Add(ActionButton("Apply the 5 recommended user-level tweaks", () =>
+        page.Children.Add(WelcomeBlock("Optimisation", "Choose changes deliberately. Supported changes are backed up and can be restored."));
+        page.Children.Add(ActionButton("Apply all supported Free tweaks", () =>
         {
-            var recommended = TweakService.Definitions.Where(t => t.Id is "suggestions" or "game-mode" or "game-dvr" or "mouse-acceleration" or "advertising-id");
-            ApplyTweaks(recommended.ToArray());
-        }, accent: true, margin: new Thickness(0, 0, 0, 12)));
-        foreach (var category in TweakService.Definitions.GroupBy(t => t.Category))
+            var supported = _tweakService.Definitions
+                .Where(t => t.Tier == "Free" && _tweakService.CanApply(t))
+                .ToArray();
+            ApplyTweaks(supported);
+        }, accent: true, margin: new Thickness(0, 0, 0, 12), enabled: _tweakService.SupportedFreeCount > 0));
+        var availability = TweakService.IsDeveloperBuild
+            ? "This Debug page lists supported Free tweaks; its bulk action applies Free entries only. The Tweaks library also exposes eligible Premium actions for local development."
+            : $"In this Release build, only {_tweakService.SupportedFreeCount} low-risk Free current-user registry tweaks can be applied.";
+        page.Children.Add(Body($"The catalog includes {_tweakService.Definitions.Count} entries. {availability} Bulk apply skips all other entries.", 12));
+        foreach (var category in _tweakService.Definitions
+                     .Where(t => t.Tier == "Free" && _tweakService.CanApply(t))
+                     .GroupBy(t => t.Category))
         {
             var group = new StackPanel { Margin = new Thickness(0, 4, 0, 10) };
             group.Children.Add(SectionTitle(category.Key));
@@ -210,7 +221,14 @@ public partial class MainWindow : Window
     private UIElement BuildTweaks()
     {
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Tweak library", $"{TweakService.Definitions.Count} implemented, reversible per-user tweaks. Search and filter the settings available in this build. No system services or security protections are disabled."));
+        page.Children.Add(WelcomeBlock("Tweak library", $"{_tweakService.Definitions.Count} catalog entries · {_tweakService.FreeCatalogCount} Free · {_tweakService.PremiumCatalogCount} Premium · {_tweakService.SupportedCount} safely actionable in this build."));
+        page.Children.Add(Body("Every supplied entry is listed below. Only validated low-risk HKCU registry toggles are enabled. Raw PowerShell, service, administrator-level registry, adapter, network, and power commands are not executed from this catalog. Premium catalog labels do not imply verified subscriptions.", 12));
+        page.Children.Add(ActionButton(
+            TweakService.IsDeveloperBuild ? "Apply all safe actions in developer build" : "Apply all supported Free tweaks",
+            ApplyAllCatalogTweaks,
+            accent: true,
+            margin: new Thickness(0, 10, 0, 10),
+            enabled: _tweakService.SupportedCount > 0));
         var filters = new DockPanel { Margin = new Thickness(0, 0, 0, 12) };
         var search = new TextBox
         {
@@ -230,12 +248,25 @@ public partial class MainWindow : Window
             Foreground = Brushes.WhiteSmoke
         };
         categoryFilter.Items.Add("All categories");
-        foreach (var category in TweakService.Definitions.Select(t => t.Category).Distinct().OrderBy(c => c))
+        var tierFilter = new ComboBox
+        {
+            Width = 140,
+            Margin = new Thickness(8, 0, 0, 0),
+            Background = (Brush)FindResource("PanelBrush"),
+            Foreground = Brushes.WhiteSmoke
+        };
+        tierFilter.Items.Add("All tiers");
+        tierFilter.Items.Add("Free");
+        tierFilter.Items.Add("Premium");
+        tierFilter.SelectedIndex = 0;
+        foreach (var category in _tweakService.Definitions.Select(t => t.Category).Distinct().OrderBy(c => c))
             categoryFilter.Items.Add(category);
         categoryFilter.SelectedIndex = 0;
         filters.Children.Add(search);
         DockPanel.SetDock(categoryFilter, Dock.Right);
         filters.Children.Add(categoryFilter);
+        DockPanel.SetDock(tierFilter, Dock.Right);
+        filters.Children.Add(tierFilter);
         page.Children.Add(filters);
 
         var results = new StackPanel();
@@ -244,18 +275,21 @@ public partial class MainWindow : Window
             results.Children.Clear();
             var query = search.Text.Trim();
             var selectedCategory = categoryFilter.SelectedItem?.ToString();
-            var matches = TweakService.Definitions.Where(t =>
+            var selectedTier = tierFilter.SelectedItem?.ToString();
+            var matches = _tweakService.Definitions.Where(t =>
                 (selectedCategory == "All categories" || t.Category == selectedCategory)
+                && (selectedTier == "All tiers" || t.Tier == selectedTier)
                 && (string.IsNullOrWhiteSpace(query)
                     || t.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || t.Id.Contains(query, StringComparison.OrdinalIgnoreCase)
                     || t.Category.Contains(query, StringComparison.OrdinalIgnoreCase)
                     || t.Description.Contains(query, StringComparison.OrdinalIgnoreCase)
-                    || t.Benefit.Contains(query, StringComparison.OrdinalIgnoreCase)
-                    || t.Tradeoff.Contains(query, StringComparison.OrdinalIgnoreCase)))
+                    || t.Risk.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || t.Requires.Contains(query, StringComparison.OrdinalIgnoreCase)))
                 .ToArray();
             if (matches.Length == 0)
             {
-                results.Children.Add(Body("No implemented tweaks match this search.", 12));
+                results.Children.Add(Body("No catalog entries match this search.", 12));
                 return;
             }
             foreach (var category in matches.GroupBy(t => t.Category))
@@ -267,6 +301,7 @@ public partial class MainWindow : Window
         }
         search.TextChanged += (_, _) => RefreshResults();
         categoryFilter.SelectionChanged += (_, _) => RefreshResults();
+        tierFilter.SelectionChanged += (_, _) => RefreshResults();
         RefreshResults();
         page.Children.Add(results);
         return ScrollPage(page);
@@ -277,19 +312,53 @@ public partial class MainWindow : Window
         var panel = new StackPanel();
         panel.Children.Add(new TextBlock { Text = tweak.Name, FontSize = 15, FontWeight = FontWeights.SemiBold });
         panel.Children.Add(Body(tweak.Description, 12));
-        panel.Children.Add(Body("Purpose: " + tweak.Benefit, 11));
-        panel.Children.Add(Body("Tradeoff: " + tweak.Tradeoff + (tweak.RestartRequired ? " Restart may be required." : " No restart expected."), 11));
+        panel.Children.Add(Body($"{tweak.Tier} · {tweak.Risk} risk · {tweak.Kind} · Requires: {tweak.Requires} · Restart: {(tweak.RestartRequired ? "yes" : "no")}", 11));
+        panel.Children.Add(Body("Performance effect is not independently benchmarked. Do not expect a guaranteed FPS or latency improvement.", 11));
         var row = new DockPanel { Margin = new Thickness(0, 10, 0, 0) };
         var status = new TextBlock { Text = _tweakService.GetStatus(tweak), Foreground = (Brush)FindResource("MutedBrush"), VerticalAlignment = VerticalAlignment.Center };
         DockPanel.SetDock(status, Dock.Right);
         row.Children.Add(status);
         var hasBackup = _tweakService.HasBackup(tweak);
-        var action = ActionButton(hasBackup ? "Undo" : "Apply",
-            () => ChangeTweak(tweak, !hasBackup), accent: !hasBackup);
+        var supported = _tweakService.CanApply(tweak);
+        var isApplied = supported && _tweakService.IsApplied(tweak);
+        var actionLabel = !supported ? "Unavailable"
+            : isApplied ? hasBackup ? "Undo" : "Already set"
+            : "Apply";
+        var action = ActionButton(actionLabel,
+            () => ChangeTweak(tweak, !isApplied),
+            accent: supported && !isApplied,
+            enabled: supported && (!isApplied || hasBackup));
         DockPanel.SetDock(action, Dock.Left);
         row.Children.Add(action);
+        if (supported && hasBackup && !isApplied)
+            row.Children.Add(ActionButton("Undo", () => ChangeTweak(tweak, apply: false), margin: new Thickness(8, 0, 0, 0)));
         panel.Children.Add(row);
         return Card(tweak.Category.ToUpperInvariant(), panel, new Thickness(0, 4, 0, 8));
+    }
+
+    private UIElement BuildDeveloperTools()
+    {
+        var page = NewPage();
+        page.Children.Add(WelcomeBlock("Developer workspace", "Available only in Debug builds to help the project maintainer edit the local catalog."));
+        page.Children.Add(Body("This is a development convenience, not authenticated owner access or a security boundary. Anyone who builds the public source in Debug can see it. Real owner-only permissions require a verified backend, which RISE does not currently have.", 12));
+        page.Children.Add(Body($"The editable catalog is loaded from: {_tweakService.CatalogPath}", 12));
+        page.Children.Add(ActionButton("Open editable tweak catalog", OpenTweakCatalog, accent: true, margin: new Thickness(0, 12, 0, 8)));
+        page.Children.Add(ActionButton("Open all catalog entries", () => ShowPage("Tweaks"), margin: new Thickness(0, 0, 0, 8)));
+        page.Children.Add(Body($"Catalog: {_tweakService.Definitions.Count} total · {_tweakService.FreeCatalogCount} Free · {_tweakService.PremiumCatalogCount} Premium · {_tweakService.SupportedCount} safe actions available in this Debug build.", 12));
+        page.Children.Add(Body("After editing the JSON, restart RISE to reload it. Only Low-risk Toggle entries with `requires: None` and current-user HKCU registry actions under the allowed Windows settings roots can run. Arbitrary PowerShell, service, network, adapter, powercfg, and administrator-level actions remain blocked.", 12));
+        return ScrollPage(page);
+    }
+
+    private void OpenTweakCatalog()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(_tweakService.CatalogPath) { UseShellExecute = true });
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or IOException)
+        {
+            MessageBox.Show($"Windows could not open the tweak catalog.\n\n{_tweakService.CatalogPath}\n\n{ex.Message}", "Catalog unavailable", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private UIElement BuildGames()
@@ -506,7 +575,7 @@ public partial class MainWindow : Window
             AppendActivity($"{(enabled ? "Restored" : "Disabled")} current-user startup entry: {entry.Name}.");
             ShowPage("Startup Manager");
         }
-        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException or InvalidOperationException)
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException or InvalidOperationException or FormatException)
         {
             MessageBox.Show($"RISE could not update this startup entry.\n\n{ex.Message}", "Startup change failed", MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -515,7 +584,7 @@ public partial class MainWindow : Window
     private UIElement BuildSettings()
     {
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Settings & support", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0"} · Settings are stored under your local app data."));
+        page.Children.Add(WelcomeBlock("Settings & support", $"RISE FREE · {_tweakService.SupportedFreeCount} supported tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.5.0"} · Settings are stored under your local app data."));
 
         var accentPanel = new StackPanel();
         accentPanel.Children.Add(new TextBlock { Text = "Accent colour", FontWeight = FontWeights.SemiBold });
@@ -550,7 +619,7 @@ public partial class MainWindow : Window
         page.Children.Add(Body("RISE does not currently have desktop authentication or a subscription-verification backend. The app cannot verify or grant Pro entitlements.", 12));
         page.Children.Add(ActionButton("Discord support & community", () => OpenUrl("https://discord.com/invite/qfqhJRv8m"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(ActionButton("Official website", () => OpenUrl("https://risetweaks.netlify.app/"), margin: new Thickness(0, 0, 0, 8)));
-        page.Children.Add(Body($"RISE version {GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0"} · no password or account data is stored locally.", 12));
+        page.Children.Add(Body($"RISE version {GetType().Assembly.GetName().Version?.ToString(3) ?? "0.5.0"} · no password or account data is stored locally.", 12));
         page.Children.Add(Body("Automatic update checking, tray minimization, account/license validation, and developer diagnostics are not implemented in this build.", 12));
         return ScrollPage(page);
     }
@@ -619,7 +688,7 @@ public partial class MainWindow : Window
             if (apply)
             {
                 var result = MessageBox.Show(
-                    $"Apply “{tweak.Name}”?\n\n{tweak.Description}\n\nTradeoff: {tweak.Tradeoff}\n\nRISE will save the current per-user registry values before changing them.",
+                    $"Apply “{tweak.Name}”?\n\n{tweak.Description}\n\nCatalog risk: {tweak.Risk}\nTier: {tweak.Tier}\nRestart required: {(tweak.RestartRequired ? "yes" : "no")}\n\nRISE will back up the original current-user registry values before changing them.",
                     "Confirm Windows setting",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
@@ -632,7 +701,7 @@ public partial class MainWindow : Window
             }
             ShowPage(_currentPage);
         }
-        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException)
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException or InvalidOperationException or FormatException)
         {
             MessageBox.Show($"RISE could not change this setting.\n\n{ex.Message}", "Change failed", MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -640,29 +709,35 @@ public partial class MainWindow : Window
 
     private void ApplyTweaks(IReadOnlyCollection<TweakDefinition> tweaks)
     {
-        var pending = tweaks.Where(t => _tweakService.GetStatus(t) != "Applied").ToArray();
+        var pending = tweaks.Where(t => _tweakService.CanApply(t) && !_tweakService.IsApplied(t)).ToArray();
         if (pending.Length == 0)
         {
-            MessageBox.Show("All recommended tweaks are already applied.", "RISE", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("There are no new supported tweaks to apply. Existing changes can be restored individually or with Restore All.", "RISE", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
-        var prompt = "Apply these reversible per-user Windows settings?\n\n" + string.Join("\n", pending.Select(t => "• " + t.Name)) + "\n\nA backup of each current value is saved before it is changed.";
-        if (MessageBox.Show(prompt, "Confirm recommended tweaks", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+        var prompt = "Apply these supported, reversible current-user registry tweaks?\n\n" + string.Join("\n", pending.Select(t => "• " + t.Name)) + "\n\nUnsupported catalog entries are skipped. The original value of every changed setting is backed up first.";
+        if (MessageBox.Show(prompt, "Confirm Apply All", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
         try
         {
             foreach (var tweak in pending) _tweakService.Apply(tweak);
             ShowPage(_currentPage);
-            MessageBox.Show($"{pending.Length} settings applied.", "RISE", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"{pending.Length} tweaks applied.", "RISE", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException)
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or System.Security.SecurityException or InvalidOperationException or FormatException)
         {
             MessageBox.Show($"The operation stopped at the first error. Review the saved backups and activity log.\n\n{ex.Message}", "Optimisation incomplete", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
+    private void ApplyAllCatalogTweaks()
+    {
+        var supported = _tweakService.Definitions.Where(_tweakService.CanApply).ToArray();
+        ApplyTweaks(supported);
+    }
+
     private void RestoreAllTweaks()
     {
-        var saved = TweakService.Definitions.Where(_tweakService.HasBackup).ToArray();
+        var saved = _tweakService.Definitions.Where(_tweakService.HasBackup).ToArray();
         if (saved.Length == 0)
         {
             MessageBox.Show("No RISE-managed tweaks are currently applied.", "RISE", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -923,7 +998,7 @@ public partial class MainWindow : Window
                 .AppendLine($"Network: {snapshot.Network}")
                 .AppendLine()
                 .AppendLine("RISE-managed tweak status:")
-                .AppendJoin(Environment.NewLine, TweakService.Definitions.Select(t => $"- {t.Name}: {_tweakService.GetStatus(t)}"))
+                .AppendJoin(Environment.NewLine, _tweakService.Definitions.Select(t => $"- {t.Name}: {_tweakService.GetStatus(t)}"))
                 .AppendLine()
                 .AppendLine("Game detection:")
                 .AppendJoin(Environment.NewLine, GameCatalog.Games.Select(g => $"- {g.Name}: {g.Status}"));

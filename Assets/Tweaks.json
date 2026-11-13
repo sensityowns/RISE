@@ -1,0 +1,4688 @@
+{
+  "version": 1,
+  "generated": "2026-11-10",
+  "tweaks": [
+    {
+      "id": "disable-game-mode-auto-start",
+      "name": "Disable Game Mode Auto-Start",
+      "description": "Stops Windows from switching on Game Mode automatically.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\GameBar",
+          "name": "AutoGameModeEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\GameBar",
+          "name": "AllowAutoGameMode",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-game-dvr-capture",
+      "name": "Disable Game DVR Capture",
+      "description": "Turns off background game recording and clip capture.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "System\\GameConfigStore",
+          "name": "GameDVR_Enabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+          "name": "AppCaptureEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR",
+          "name": "AllowGameDVR",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-fullscreen-optimizations-global",
+      "name": "Disable Fullscreen Optimizations (Global)",
+      "description": "Uses classic exclusive fullscreen behavior for all games.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "System\\GameConfigStore",
+          "name": "GameDVR_FSEBehaviorMode",
+          "kind": "DWord",
+          "value": 2
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "System\\GameConfigStore",
+          "name": "GameDVR_HonorUserFSEBehaviorMode",
+          "kind": "DWord",
+          "value": 1
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "System\\GameConfigStore",
+          "name": "GameDVR_FSEBehavior",
+          "kind": "DWord",
+          "value": 2
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "System\\GameConfigStore",
+          "name": "GameDVR_DXGIHonorFSEWindowsCompatible",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-game-bar-startup-panel",
+      "name": "Disable Game Bar Startup Panel",
+      "description": "Hides the Game Bar tips and startup panel.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\GameBar",
+          "name": "ShowStartupPanel",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\GameBar",
+          "name": "UseNexusForGameBarEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "enable-hardware-accelerated-gpu-scheduling",
+      "name": "Enable Hardware-Accelerated GPU Scheduling",
+      "description": "Lets the GPU manage its own memory scheduling (needs a supported GPU and driver).",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers",
+          "name": "HwSchMode",
+          "kind": "DWord",
+          "value": 2
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "optimize-windowed-games-flip-model-vrr",
+      "name": "Optimize Windowed Games (Flip Model + VRR)",
+      "description": "Enables windowed-game optimizations and variable refresh rate for windowed games.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\DirectX\\UserGpuPreferences",
+          "name": "DirectXUserGlobalSettings",
+          "kind": "String",
+          "value": "VRROptimizeEnable=1;SwapEffectUpgradeEnable=1;"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "mmcss-games-task-high-gpu-priority",
+      "name": "MMCSS Games Task: High GPU Priority",
+      "description": "Raises GPU priority for the Games multimedia task.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+          "name": "GPU Priority",
+          "kind": "DWord",
+          "value": 8
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "mmcss-games-task-higher-cpu-priority",
+      "name": "MMCSS Games Task: Higher CPU Priority",
+      "description": "Raises CPU priority for the Games multimedia task.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+          "name": "Priority",
+          "kind": "DWord",
+          "value": 6
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "mmcss-games-task-high-scheduling-category",
+      "name": "MMCSS Games Task: High Scheduling Category",
+      "description": "Sets the Games task scheduling category to High.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+          "name": "Scheduling Category",
+          "kind": "String",
+          "value": "High"
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+          "name": "SFIO Priority",
+          "kind": "String",
+          "value": "High"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "reduce-multimedia-system-responsiveness-reserve",
+      "name": "Reduce Multimedia System Responsiveness Reserve",
+      "description": "Lowers the CPU share reserved for background multimedia tasks.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+          "name": "SystemResponsiveness",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "optimize-foreground-process-priority",
+      "name": "Optimize Foreground Process Priority",
+      "description": "Gives the foreground app (your game) longer, higher-priority time slices.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+          "name": "Win32PrioritySeparation",
+          "kind": "DWord",
+          "value": 38
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-power-throttling",
+      "name": "Disable Power Throttling",
+      "description": "Stops Windows from throttling background processes to save power.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling",
+          "name": "PowerThrottlingOff",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-multiplane-overlay-mpo",
+      "name": "Disable Multiplane Overlay (MPO)",
+      "description": "Can fix flicker, stutter and black screens on some GPUs.",
+      "category": "Gaming",
+      "risk": "High",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows\\Dwm",
+          "name": "OverlayTestMode",
+          "kind": "DWord",
+          "value": 5
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-fault-tolerant-heap",
+      "name": "Disable Fault Tolerant Heap",
+      "description": "Stops Windows from applying slower compatibility mitigations to crashing apps.",
+      "category": "Gaming",
+      "risk": "High",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\FTH",
+          "name": "Enabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "game-process-priority-high-per-game",
+      "name": "Game Process Priority: High (per game)",
+      "description": "Runs a chosen game .exe at High CPU priority every launch.",
+      "category": "Gaming",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Parametric",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\{exe}\\PerfOptions",
+          "name": "CpuPriorityClass",
+          "kind": "DWord",
+          "value": 3
+        }
+      ],
+      "note": "param: exe (e.g. game.exe)",
+      "tier": "Premium"
+    },
+    {
+      "id": "force-high-performance-gpu-per-game",
+      "name": "Force High-Performance GPU (per game)",
+      "description": "Assigns a chosen game to the high-performance GPU on hybrid-graphics laptops.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Parametric",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\DirectX\\UserGpuPreferences",
+          "name": "{fullpath}",
+          "kind": "String",
+          "value": "GpuPreference=2;"
+        }
+      ],
+      "note": "param: fullpath of the game exe",
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-fullscreen-optimizations-per-game",
+      "name": "Disable Fullscreen Optimizations (per game)",
+      "description": "Turns off fullscreen optimizations for one game.",
+      "category": "Gaming",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Parametric",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers",
+          "name": "{fullpath}",
+          "kind": "String",
+          "value": "~ DISABLEDXMAXIMIZEDWINDOWEDMODE"
+        }
+      ],
+      "note": "param: fullpath of the game exe. // VERIFY flag string on your build",
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-mouse-acceleration",
+      "name": "Disable Mouse Acceleration",
+      "description": "Turns off Enhance Pointer Precision for 1:1 mouse movement.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Mouse",
+          "name": "MouseSpeed",
+          "kind": "String",
+          "value": "0"
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Mouse",
+          "name": "MouseThreshold1",
+          "kind": "String",
+          "value": "0"
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Mouse",
+          "name": "MouseThreshold2",
+          "kind": "String",
+          "value": "0"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "faster-mouse-hover-response",
+      "name": "Faster Mouse Hover Response",
+      "description": "Reduces the delay before hover tooltips and previews.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Mouse",
+          "name": "MouseHoverTime",
+          "kind": "String",
+          "value": "10"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "fastest-keyboard-repeat-rate",
+      "name": "Fastest Keyboard Repeat Rate",
+      "description": "Shortest repeat delay and fastest repeat speed.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Keyboard",
+          "name": "KeyboardDelay",
+          "kind": "String",
+          "value": "0"
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Keyboard",
+          "name": "KeyboardSpeed",
+          "kind": "String",
+          "value": "31"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-sticky-keys-prompt",
+      "name": "Disable Sticky Keys Prompt",
+      "description": "Stops the Shift-x5 Sticky Keys popup in games.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Accessibility\\StickyKeys",
+          "name": "Flags",
+          "kind": "String",
+          "value": "506"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-filter-keys-prompt",
+      "name": "Disable Filter Keys Prompt",
+      "description": "Stops the hold-Shift Filter Keys popup.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Accessibility\\Keyboard Response",
+          "name": "Flags",
+          "kind": "String",
+          "value": "122"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-toggle-keys-prompt",
+      "name": "Disable Toggle Keys Prompt",
+      "description": "Stops the Num Lock hold Toggle Keys popup.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Accessibility\\ToggleKeys",
+          "name": "Flags",
+          "kind": "String",
+          "value": "58"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-touch-visual-feedback",
+      "name": "Disable Touch Visual Feedback",
+      "description": "Removes touch and gesture visual effects.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Cursors",
+          "name": "ContactVisualization",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Cursors",
+          "name": "GestureVisualization",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-windows-ink-workspace",
+      "name": "Disable Windows Ink Workspace",
+      "description": "Turns off the pen/ink workspace and its background activity.",
+      "category": "Input",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\WindowsInkWorkspace",
+          "name": "AllowWindowsInkWorkspace",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-usb-selective-suspend",
+      "name": "Disable USB Selective Suspend",
+      "description": "Keeps USB mice, keyboards and controllers fully powered.",
+      "category": "Input",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 1"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-teredo-tunneling",
+      "name": "Disable Teredo Tunneling",
+      "description": "Turns off Teredo IPv6 tunneling (can affect some Xbox/multiplayer setups).",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "netsh",
+          "apply": "interface teredo set state disabled",
+          "revert": "interface teredo set state default"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-tcp-receive-segment-coalescing",
+      "name": "Disable TCP Receive Segment Coalescing",
+      "description": "Disables RSC, which can add small delay.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "netsh",
+          "apply": "int tcp set global rsc=disabled",
+          "revert": "int tcp set global rsc=enabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-tcp-auto-tuning-heuristics",
+      "name": "Disable TCP Auto-Tuning Heuristics",
+      "description": "Stops Windows from limiting the receive window automatically.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "netsh",
+          "apply": "int tcp set heuristics disabled",
+          "revert": "int tcp set heuristics enabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "lower-tcp-initial-retransmit-timeout",
+      "name": "Lower TCP Initial Retransmit Timeout",
+      "description": "Retries lost packets sooner (3000 ms to 2000 ms).",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "netsh",
+          "apply": "int tcp set global initialRto=2000",
+          "revert": "int tcp set global initialRto=3000"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-nagle-s-algorithm-all-adapters",
+      "name": "Disable Nagle's Algorithm (All Adapters)",
+      "description": "Sends small packets immediately, which can lower game latency.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registryPerAdapter",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\{adapterGuid}",
+          "values": [
+            {
+              "name": "TcpAckFrequency",
+              "kind": "DWord",
+              "value": 1
+            },
+            {
+              "name": "TCPNoDelay",
+              "kind": "DWord",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-network-throttling",
+      "name": "Disable Network Throttling",
+      "description": "Removes the multimedia network throttling limit.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+          "name": "NetworkThrottlingIndex",
+          "kind": "DWord",
+          "value": 4294967295
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "remove-qos-reserved-bandwidth",
+      "name": "Remove QoS Reserved Bandwidth",
+      "description": "Stops Windows reserving bandwidth for QoS.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\Psched",
+          "name": "NonBestEffortLimit",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "increase-ephemeral-port-range",
+      "name": "Increase Ephemeral Port Range",
+      "description": "Raises the maximum number of outgoing connection ports.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters",
+          "name": "MaxUserPort",
+          "kind": "DWord",
+          "value": 65534
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "faster-tcp-connection-cleanup",
+      "name": "Faster TCP Connection Cleanup",
+      "description": "Frees closed connections sooner (TIME_WAIT 30s).",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters",
+          "name": "TcpTimedWaitDelay",
+          "kind": "DWord",
+          "value": 30
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "prefer-ipv4-over-ipv6",
+      "name": "Prefer IPv4 over IPv6",
+      "description": "Prefers IPv4 when both are available (does not remove IPv6).",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters",
+          "name": "DisabledComponents",
+          "kind": "DWord",
+          "value": 32
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-llmnr",
+      "name": "Disable LLMNR",
+      "description": "Turns off Link-Local Multicast Name Resolution (less network chatter).",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient",
+          "name": "EnableMulticast",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-mdns",
+      "name": "Disable mDNS",
+      "description": "Turns off multicast DNS in Windows.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Services\\Dnscache\\Parameters",
+          "name": "EnableMDNS",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-netbios-over-tcp-ip",
+      "name": "Disable NetBIOS over TCP/IP",
+      "description": "Turns off legacy NetBIOS name service on all adapters.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=true' | Invoke-CimMethod -MethodName SetTcpipNetbios -Arguments @{TcpipNetbiosOptions=2}",
+          "revert": "Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=true' | Invoke-CimMethod -MethodName SetTcpipNetbios -Arguments @{TcpipNetbiosOptions=0}"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-delivery-optimization-p2p-updates",
+      "name": "Disable Delivery Optimization (P2P Updates)",
+      "description": "Stops Windows uploading updates to other PCs.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+          "name": "DODownloadMode",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-wi-fi-auto-connect-to-suggested-hotspots",
+      "name": "Disable Wi-Fi Auto-Connect to Suggested Hotspots",
+      "description": "Stops auto-joining open or suggested hotspots.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\WcmSvc\\wifinetworkmanager\\config",
+          "name": "AutoConnectAllowedOEM",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "set-dns-cloudflare-1-1-1-1",
+      "name": "Set DNS: Cloudflare (1.1.1.1)",
+      "description": "Switches active adapters to Cloudflare DNS.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1,1.0.0.1",
+          "revert": "Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ResetServerAddresses"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "set-dns-google-8-8-8-8",
+      "name": "Set DNS: Google (8.8.8.8)",
+      "description": "Switches active adapters to Google DNS.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ServerAddresses 8.8.8.8,8.8.4.4",
+          "revert": "Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ResetServerAddresses"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "set-dns-quad9-9-9-9-9",
+      "name": "Set DNS: Quad9 (9.9.9.9)",
+      "description": "Switches active adapters to Quad9 DNS.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ServerAddresses 9.9.9.9,149.112.112.112",
+          "revert": "Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ResetServerAddresses"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-adapter-power-management",
+      "name": "Disable Adapter Power Management",
+      "description": "Stops Windows turning off network adapters to save power.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Get-NetAdapter -Physical | Disable-NetAdapterPowerManagement -ErrorAction SilentlyContinue",
+          "revert": "Get-NetAdapter -Physical | Enable-NetAdapterPowerManagement -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "adapter-energy-efficient-ethernet-off",
+      "name": "Adapter: Energy-Efficient Ethernet Off",
+      "description": "Disables EEE power saving on the Ethernet adapter. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Energy-Efficient Ethernet",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-green-ethernet-off",
+      "name": "Adapter: Green Ethernet Off",
+      "description": "Disables Green Ethernet power saving. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Green Ethernet",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-gigabit-lite-off",
+      "name": "Adapter: Gigabit Lite Off",
+      "description": "Disables Gigabit Lite power saving. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Gigabit Lite",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-interrupt-moderation-off",
+      "name": "Adapter: Interrupt Moderation Off",
+      "description": "Handles packets immediately; may raise CPU use. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Interrupt Moderation",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-flow-control-off",
+      "name": "Adapter: Flow Control Off",
+      "description": "Turns off Ethernet flow control. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Flow Control",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-large-send-offload-v2-ipv4-off",
+      "name": "Adapter: Large Send Offload v2 (IPv4) Off",
+      "description": "Disables LSOv2 for IPv4. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Large Send Offload v2 (IPv4)",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-large-send-offload-v2-ipv6-off",
+      "name": "Adapter: Large Send Offload v2 (IPv6) Off",
+      "description": "Disables LSOv2 for IPv6. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Large Send Offload v2 (IPv6)",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-wake-on-magic-packet-off",
+      "name": "Adapter: Wake on Magic Packet Off",
+      "description": "Stops the adapter waking the PC. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Wake on Magic Packet",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-wake-on-pattern-match-off",
+      "name": "Adapter: Wake on Pattern Match Off",
+      "description": "Stops pattern-based wake. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Wake on Pattern Match",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "adapter-shutdown-wake-on-lan-off",
+      "name": "Adapter: Shutdown Wake-On-Lan Off",
+      "description": "Disables Wake-on-LAN from shutdown. Only applies if your driver exposes this setting.",
+      "category": "Network",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "adapterProperty",
+          "displayName": "Shutdown Wake-On-Lan",
+          "displayValue": "Disabled",
+          "revert": "restoreCaptured"
+        }
+      ],
+      "note": "Driver-specific. Skip silently if the property is missing.",
+      "tier": "Premium"
+    },
+    {
+      "id": "flush-dns-cache",
+      "name": "Flush DNS Cache",
+      "description": "Clears the DNS resolver cache.",
+      "category": "Network",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "ipconfig /flushdns"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "reset-winsock-catalog",
+      "name": "Reset Winsock Catalog",
+      "description": "Repairs the Windows socket layer.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "netsh winsock reset"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "reset-tcp-ip-stack",
+      "name": "Reset TCP/IP Stack",
+      "description": "Resets TCP/IP settings to defaults.",
+      "category": "Network",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "netsh int ip reset"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "enable-ultimate-performance-power-plan",
+      "name": "Enable Ultimate Performance Power Plan",
+      "description": "Adds and activates the hidden Ultimate Performance plan.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61; powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61",
+          "revert": "powercfg /setactive 381b4222-f694-41f0-9685-ff5bb260df2e"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "minimum-cpu-state-100-plugged-in",
+      "name": "Minimum CPU State 100% (Plugged In)",
+      "description": "Keeps CPU clocks high at all times when plugged in.",
+      "category": "Power",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "maximum-cpu-state-100-plugged-in",
+      "name": "Maximum CPU State 100% (Plugged In)",
+      "description": "Allows full CPU speed when plugged in.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-cpu-core-parking",
+      "name": "Disable CPU Core Parking",
+      "description": "Keeps all CPU cores active.",
+      "category": "Power",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR CPMINCORES 100",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR CPMINCORES 0"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "aggressive-cpu-boost-mode",
+      "name": "Aggressive CPU Boost Mode",
+      "description": "Sets processor performance boost mode to Aggressive.",
+      "category": "Power",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 2",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 1"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-pci-express-link-state-power-management",
+      "name": "Disable PCI Express Link State Power Management",
+      "description": "Keeps PCIe devices at full speed.",
+      "category": "Power",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PCIEXPRESS ASPM 0",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PCIEXPRESS ASPM 1"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "wireless-adapter-max-performance-plugged-in",
+      "name": "Wireless Adapter Max Performance (Plugged In)",
+      "description": "Disables Wi-Fi power saving on AC.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "never-turn-off-hard-disk-plugged-in",
+      "name": "Never Turn Off Hard Disk (Plugged In)",
+      "description": "Stops disks spinning down on AC.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_DISK DISKIDLE 0",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_DISK DISKIDLE 1200"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-cpu-idle-states",
+      "name": "Disable CPU Idle States",
+      "description": "Prevents CPU deep idle. Runs hotter and uses more power.",
+      "category": "Power",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR IDLEDISABLE 1",
+          "revert": "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR IDLEDISABLE 0"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-hibernation",
+      "name": "Disable Hibernation",
+      "description": "Turns off hibernation and frees the hiberfil.sys space.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "powercfg /hibernate off",
+          "revert": "powercfg /hibernate on"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-fast-startup",
+      "name": "Disable Fast Startup",
+      "description": "Makes shutdowns full shutdowns; helps with driver and network issues.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power",
+          "name": "HiberbootEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "never-sleep-plugged-in",
+      "name": "Never Sleep (Plugged In)",
+      "description": "Disables sleep timeout on AC.",
+      "category": "Power",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "powercfg /change standby-timeout-ac 0",
+          "revert": "powercfg /change standby-timeout-ac 30"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "visual-effects-best-performance",
+      "name": "Visual Effects: Best Performance",
+      "description": "Switches Windows visual effects to the best performance preset.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects",
+          "name": "VisualFXSetting",
+          "kind": "DWord",
+          "value": 2
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-window-minimize-maximize-animations",
+      "name": "Disable Window Minimize/Maximize Animations",
+      "description": "Removes window open/close animation.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Desktop\\WindowMetrics",
+          "name": "MinAnimate",
+          "kind": "String",
+          "value": "0"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-taskbar-animations",
+      "name": "Disable Taskbar Animations",
+      "description": "Turns off taskbar button animations.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "TaskbarAnimations",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-transparency-effects",
+      "name": "Disable Transparency Effects",
+      "description": "Turns off Windows transparency and blur.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+          "name": "EnableTransparency",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-peek-preview",
+      "name": "Disable Peek Preview",
+      "description": "Turns off desktop and taskbar peek.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\DWM",
+          "name": "EnableAeroPeek",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-aero-shake",
+      "name": "Disable Aero Shake",
+      "description": "Disables window shaking to minimize others.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "DisallowShaking",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "instant-menu-display",
+      "name": "Instant Menu Display",
+      "description": "Removes the menu show delay.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Desktop",
+          "name": "MenuShowDelay",
+          "kind": "String",
+          "value": "0"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-shadows-under-icon-labels",
+      "name": "Disable Shadows Under Icon Labels",
+      "description": "Removes shadows from desktop icon labels.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "ListviewShadow",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-translucent-selection-rectangle",
+      "name": "Disable Translucent Selection Rectangle",
+      "description": "Uses a plain selection rectangle.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "ListviewAlphaSelect",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "show-icons-instead-of-thumbnails",
+      "name": "Show Icons Instead of Thumbnails",
+      "description": "Faster folders with many images or videos.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "IconsOnly",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-lock-screen-acrylic-blur",
+      "name": "Disable Lock Screen Acrylic Blur",
+      "description": "Removes the blur on the sign-in screen.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+          "name": "DisableAcrylicBackgroundOnLogon",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "faster-startup-apps-launch",
+      "name": "Faster Startup Apps Launch",
+      "description": "Removes the artificial startup app delay.",
+      "category": "Visual",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize",
+          "name": "StartupDelayInMSec",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "faster-shutdown-auto-end-tasks",
+      "name": "Faster Shutdown: Auto End Tasks",
+      "description": "Closes hung apps automatically at shutdown.",
+      "category": "Visual",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Desktop",
+          "name": "AutoEndTasks",
+          "kind": "String",
+          "value": "1"
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Desktop",
+          "name": "HungAppTimeout",
+          "kind": "String",
+          "value": "2000"
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Control Panel\\Desktop",
+          "name": "WaitToKillAppTimeout",
+          "kind": "String",
+          "value": "2000"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "faster-shutdown-service-timeout",
+      "name": "Faster Shutdown: Service Timeout",
+      "description": "Reduces the wait for services at shutdown.",
+      "category": "Visual",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control",
+          "name": "WaitToKillServiceTimeout",
+          "kind": "String",
+          "value": "2000"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-prefetcher",
+      "name": "Disable Prefetcher",
+      "description": "Turns off Prefetch (good on SSDs).",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters",
+          "name": "EnablePrefetcher",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-superfetch-parameter",
+      "name": "Disable Superfetch Parameter",
+      "description": "Turns off the SysMain prefetch parameter.",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters",
+          "name": "EnableSuperfetch",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-ntfs-last-access-updates",
+      "name": "Disable NTFS Last Access Updates",
+      "description": "Fewer disk writes.",
+      "category": "Memory & Storage",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "fsutil behavior set disablelastaccess 1",
+          "revert": "fsutil behavior set disablelastaccess 2"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-8-3-short-file-names",
+      "name": "Disable 8.3 Short File Names",
+      "description": "Stops creating legacy short names.",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "fsutil behavior set disable8dot3 1",
+          "revert": "fsutil behavior set disable8dot3 2"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "increase-ntfs-memory-usage",
+      "name": "Increase NTFS Memory Usage",
+      "description": "Larger NTFS cache.",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "fsutil behavior set memoryusage 2",
+          "revert": "fsutil behavior set memoryusage 1"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "ensure-ssd-trim-is-enabled",
+      "name": "Ensure SSD TRIM Is Enabled",
+      "description": "Makes sure TRIM runs on SSDs.",
+      "category": "Memory & Storage",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "fsutil behavior set DisableDeleteNotify 0",
+          "revert": "fsutil behavior set DisableDeleteNotify 0"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "keep-kernel-in-ram-disable-paging-executive",
+      "name": "Keep Kernel in RAM (Disable Paging Executive)",
+      "description": "Only recommended with 16 GB+ RAM.",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+          "name": "DisablePagingExecutive",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "optimize-service-host-split-threshold",
+      "name": "Optimize Service Host Split Threshold",
+      "description": "Sets SvcHostSplitThresholdInKB to your RAM size.",
+      "category": "Memory & Storage",
+      "risk": "High",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control",
+          "name": "SvcHostSplitThresholdInKB",
+          "kind": "DWord",
+          "value": "{ramKB}"
+        }
+      ],
+      "note": "value computed at apply time from installed RAM",
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-memory-compression",
+      "name": "Disable Memory Compression",
+      "description": "Only recommended with 16 GB+ RAM.",
+      "category": "Memory & Storage",
+      "risk": "High",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Disable-MMAgent -MemoryCompression",
+          "revert": "Enable-MMAgent -MemoryCompression"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-page-combining",
+      "name": "Disable Page Combining",
+      "description": "Stops Windows merging identical memory pages.",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": true,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Disable-MMAgent -PageCombining",
+          "revert": "Enable-MMAgent -PageCombining"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-reserved-storage",
+      "name": "Disable Reserved Storage",
+      "description": "Frees about 7 GB reserved for updates.",
+      "category": "Memory & Storage",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "DISM /Online /Set-ReservedStorageState /State:Disabled",
+          "revert": "DISM /Online /Set-ReservedStorageState /State:Enabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "enable-long-file-paths",
+      "name": "Enable Long File Paths",
+      "description": "Allows paths over 260 characters.",
+      "category": "Memory & Storage",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+          "name": "LongPathsEnabled",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-connected-user-experiences-and-telemetry",
+      "name": "Disable Connected User Experiences and Telemetry",
+      "description": "Sets the DiagTrack service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "DiagTrack",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-wap-push-message-routing",
+      "name": "Disable WAP Push Message Routing",
+      "description": "Sets the dmwappushservice service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "dmwappushservice",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-windows-error-reporting-service",
+      "name": "Disable Windows Error Reporting Service",
+      "description": "Sets the WerSvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "WerSvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "set-to-manual-downloaded-maps-manager",
+      "name": "Set to Manual: Downloaded Maps Manager",
+      "description": "Sets the MapsBroker service to Manual.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "MapsBroker",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-geolocation-service",
+      "name": "Disable Geolocation Service",
+      "description": "Sets the lfsvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "lfsvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-retail-demo-service",
+      "name": "Disable Retail Demo Service",
+      "description": "Sets the RetailDemo service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "RetailDemo",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-fax",
+      "name": "Disable Fax",
+      "description": "Sets the Fax service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "Fax",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-remote-registry",
+      "name": "Disable Remote Registry",
+      "description": "Sets the RemoteRegistry service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "RemoteRegistry",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-windows-media-player-network-sharing",
+      "name": "Disable Windows Media Player Network Sharing",
+      "description": "Sets the WMPNetworkSvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "WMPNetworkSvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-windows-insider-service",
+      "name": "Disable Windows Insider Service",
+      "description": "Sets the wisvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "wisvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-phone-service",
+      "name": "Disable Phone Service",
+      "description": "Sets the PhoneSvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "PhoneSvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-wallet-service",
+      "name": "Disable Wallet Service",
+      "description": "Sets the WalletService service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "WalletService",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-smart-card",
+      "name": "Disable Smart Card",
+      "description": "Sets the SCardSvr service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "SCardSvr",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-smart-card-device-enumeration",
+      "name": "Disable Smart Card Device Enumeration",
+      "description": "Sets the ScDeviceEnum service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "ScDeviceEnum",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-parental-controls",
+      "name": "Disable Parental Controls",
+      "description": "Sets the WpcMonSvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "WpcMonSvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-alljoyn-router-service",
+      "name": "Disable AllJoyn Router Service",
+      "description": "Sets the AJRouter service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "AJRouter",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-spatial-data-service",
+      "name": "Disable Spatial Data Service",
+      "description": "Sets the SharedRealitySvc service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "SharedRealitySvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-diagnostics-hub-collector",
+      "name": "Disable Diagnostics Hub Collector",
+      "description": "Sets the diagnosticshub.standardcollector.service service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "diagnosticshub.standardcollector.service",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-offline-files",
+      "name": "Disable Offline Files",
+      "description": "Sets the CscService service to Disabled.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "CscService",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-windows-image-acquisition-scanners-cameras",
+      "name": "Set to Manual: Windows Image Acquisition (scanners/cameras)",
+      "description": "Sets the stisvc service to Manual.",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "stisvc",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-xbox-live-game-save",
+      "name": "Set to Manual: Xbox Live Game Save",
+      "description": "Sets the XblGameSave service to Manual.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "XblGameSave",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-xbox-live-auth-manager",
+      "name": "Set to Manual: Xbox Live Auth Manager",
+      "description": "Sets the XblAuthManager service to Manual.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "XblAuthManager",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-xbox-live-networking-service",
+      "name": "Set to Manual: Xbox Live Networking Service",
+      "description": "Sets the XboxNetApiSvc service to Manual.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "XboxNetApiSvc",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-xbox-accessory-management",
+      "name": "Set to Manual: Xbox Accessory Management",
+      "description": "Sets the XboxGipSvc service to Manual.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "XboxGipSvc",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-sysmain-superfetch",
+      "name": "Disable SysMain (Superfetch)",
+      "description": "Sets the SysMain service to Disabled.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "SysMain",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-search-indexer",
+      "name": "Disable Windows Search Indexer",
+      "description": "Sets the WSearch service to Disabled.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "WSearch",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-print-spooler-only-if-you-never-print",
+      "name": "Disable Print Spooler (only if you never print)",
+      "description": "Sets the Spooler service to Disabled.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "Spooler",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-printer-extensions-and-notifications",
+      "name": "Disable Printer Extensions and Notifications",
+      "description": "Sets the PrintNotify service to Disabled.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "PrintNotify",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-touch-keyboard-and-handwriting-panel",
+      "name": "Set to Manual: Touch Keyboard and Handwriting Panel",
+      "description": "Sets the TabletInputService service to Manual.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "TabletInputService",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-mobile-hotspot",
+      "name": "Disable Windows Mobile Hotspot",
+      "description": "Sets the icssvc service to Disabled.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "icssvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "set-to-manual-bluetooth-support-only-if-you-have-no-bluetooth-devices",
+      "name": "Set to Manual: Bluetooth Support (only if you have no Bluetooth devices)",
+      "description": "Sets the bthserv service to Manual.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "bthserv",
+          "startup": "Manual"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-remote-desktop-services",
+      "name": "Disable Remote Desktop Services",
+      "description": "Sets the TermService service to Disabled.",
+      "category": "Services",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "TermService",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-program-compatibility-assistant",
+      "name": "Disable Program Compatibility Assistant",
+      "description": "Sets the PcaSvc service to Disabled.",
+      "category": "Services",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "PcaSvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-biometric-service-breaks-windows-hello",
+      "name": "Disable Windows Biometric Service (breaks Windows Hello)",
+      "description": "Sets the WbioSrvc service to Disabled.",
+      "category": "Services",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "WbioSrvc",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-nvidia-telemetry-container",
+      "name": "Disable NVIDIA Telemetry Container",
+      "description": "Stops NVIDIA telemetry service (older drivers).",
+      "category": "Services",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Nvidia",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "service",
+          "name": "NvTelemetryContainer",
+          "startup": "Disabled"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "minimize-windows-telemetry",
+      "name": "Minimize Windows Telemetry",
+      "description": "Sets telemetry to the lowest level your edition allows.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection",
+          "name": "AllowTelemetry",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-advertising-id",
+      "name": "Disable Advertising ID",
+      "description": "Stops per-user ad tracking ID.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo",
+          "name": "Enabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-activity-history",
+      "name": "Disable Activity History",
+      "description": "Stops collecting and uploading activity history.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+          "name": "EnableActivityFeed",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+          "name": "PublishUserActivities",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+          "name": "UploadUserActivities",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-settings-sync",
+      "name": "Disable Settings Sync",
+      "description": "Stops syncing settings with your Microsoft account.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\SettingSync",
+          "name": "DisableSettingSync",
+          "kind": "DWord",
+          "value": 2
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\SettingSync",
+          "name": "DisableSettingSyncUserOverride",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-location-tracking-policy",
+      "name": "Disable Location Tracking (Policy)",
+      "description": "Turns off the location platform system-wide.",
+      "category": "Privacy",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors",
+          "name": "DisableLocation",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-error-reporting",
+      "name": "Disable Windows Error Reporting",
+      "description": "Stops sending crash reports.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting",
+          "name": "Disabled",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-feedback-prompts",
+      "name": "Disable Feedback Prompts",
+      "description": "Stops Windows asking for feedback.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Siuf\\Rules",
+          "name": "NumberOfSIUFInPeriod",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-cortana",
+      "name": "Disable Cortana",
+      "description": "Turns off Cortana via policy.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search",
+          "name": "AllowCortana",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-bing-web-results-in-start-search",
+      "name": "Disable Bing Web Results in Start Search",
+      "description": "Search shows only local results.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Search",
+          "name": "BingSearchEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+          "name": "DisableSearchBoxSuggestions",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-tailored-experiences",
+      "name": "Disable Tailored Experiences",
+      "description": "Stops diagnostic-based personalized tips.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Privacy",
+          "name": "TailoredExperiencesWithDiagnosticDataEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-handwriting-data-sharing",
+      "name": "Disable Handwriting Data Sharing",
+      "description": "Stops sharing handwriting samples.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\TabletPC",
+          "name": "PreventHandwritingDataSharing",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-inking-typing-personalization",
+      "name": "Disable Inking & Typing Personalization",
+      "description": "Stops collecting typing and inking data.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\InputPersonalization",
+          "name": "RestrictImplicitInkCollection",
+          "kind": "DWord",
+          "value": 1
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\InputPersonalization",
+          "name": "RestrictImplicitTextCollection",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-online-speech-recognition",
+      "name": "Disable Online Speech Recognition",
+      "description": "Stops sending voice data online.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Speech_OneCore\\Settings\\OnlineSpeechPrivacy",
+          "name": "HasAccepted",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-app-launch-tracking",
+      "name": "Disable App Launch Tracking",
+      "description": "Stops tracking launched apps for Start suggestions.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "Start_TrackProgs",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-remote-assistance",
+      "name": "Disable Remote Assistance",
+      "description": "Blocks Remote Assistance invitations.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Remote Assistance",
+          "name": "fAllowToGetHelp",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-customer-experience-improvement-program",
+      "name": "Disable Customer Experience Improvement Program",
+      "description": "Turns off CEIP data collection.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\SQMClient\\Windows",
+          "name": "CEIPEnable",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-application-telemetry",
+      "name": "Disable Application Telemetry",
+      "description": "Turns off app compatibility telemetry and inventory.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat",
+          "name": "AITEnable",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat",
+          "name": "DisableInventory",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-copilot",
+      "name": "Disable Windows Copilot",
+      "description": "Turns off Copilot via policy.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Policies\\Microsoft\\Windows\\WindowsCopilot",
+          "name": "TurnOffWindowsCopilot",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-recall-ai-data-analysis",
+      "name": "Disable Windows Recall / AI Data Analysis",
+      "description": "Stops AI snapshot/data analysis features.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI",
+          "name": "DisableAIDataAnalysis",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-recent-documents-tracking",
+      "name": "Disable Recent Documents Tracking",
+      "description": "Stops tracking recent docs in Jump Lists.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "Start_TrackDocs",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-location",
+      "name": "Deny App Access: Location",
+      "description": "Blocks apps from using location.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-contacts",
+      "name": "Deny App Access: Contacts",
+      "description": "Blocks apps from using contacts.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\contacts",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-calendar",
+      "name": "Deny App Access: Calendar",
+      "description": "Blocks apps from using calendar.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\appointments",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-email",
+      "name": "Deny App Access: Email",
+      "description": "Blocks apps from using email.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\email",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-messaging",
+      "name": "Deny App Access: Messaging",
+      "description": "Blocks apps from using messaging.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\chat",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-phone-calls",
+      "name": "Deny App Access: Phone Calls",
+      "description": "Blocks apps from using phone calls.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\phoneCall",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-call-history",
+      "name": "Deny App Access: Call History",
+      "description": "Blocks apps from using call history.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\phoneCallHistory",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-radios-control",
+      "name": "Deny App Access: Radios Control",
+      "description": "Blocks apps from using radios control.",
+      "category": "Privacy",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\radios",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-notification-access",
+      "name": "Deny App Access: Notification Access",
+      "description": "Blocks apps from using notification access.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\userNotificationListener",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-account-info",
+      "name": "Deny App Access: Account Info",
+      "description": "Blocks apps from using account info.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\userAccountInformation",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-app-diagnostics",
+      "name": "Deny App Access: App Diagnostics",
+      "description": "Blocks apps from using app diagnostics.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\appDiagnostics",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-documents-library",
+      "name": "Deny App Access: Documents Library",
+      "description": "Blocks apps from using documents library.",
+      "category": "Privacy",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\documentsLibrary",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-pictures-library",
+      "name": "Deny App Access: Pictures Library",
+      "description": "Blocks apps from using pictures library.",
+      "category": "Privacy",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\picturesLibrary",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-videos-library",
+      "name": "Deny App Access: Videos Library",
+      "description": "Blocks apps from using videos library.",
+      "category": "Privacy",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\videosLibrary",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-full-file-system-access",
+      "name": "Deny App Access: Full File System Access",
+      "description": "Blocks apps from using full file system access.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\broadFileSystemAccess",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-activity",
+      "name": "Deny App Access: Activity",
+      "description": "Blocks apps from using activity.",
+      "category": "Privacy",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\activity",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-camera-blocks-apps-like-discord-zoom",
+      "name": "Deny App Access: Camera (blocks apps like Discord/Zoom)",
+      "description": "Blocks apps from using camera (blocks apps like discord/zoom).",
+      "category": "Privacy",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\webcam",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "deny-app-access-microphone-blocks-apps-like-discord-zoom",
+      "name": "Deny App Access: Microphone (blocks apps like Discord/Zoom)",
+      "description": "Blocks apps from using microphone (blocks apps like discord/zoom).",
+      "category": "Privacy",
+      "risk": "High",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\microphone",
+          "name": "Value",
+          "kind": "String",
+          "value": "Deny"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "show-file-extensions",
+      "name": "Show File Extensions",
+      "description": "Always show file extensions.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "HideFileExt",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "show-hidden-files",
+      "name": "Show Hidden Files",
+      "description": "Shows hidden files and folders.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "Hidden",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "open-explorer-to-this-pc",
+      "name": "Open Explorer to This PC",
+      "description": "File Explorer opens to This PC.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "LaunchTo",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "classic-right-click-menu-windows-11",
+      "name": "Classic Right-Click Menu (Windows 11)",
+      "description": "Restores the full context menu.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32",
+          "name": "",
+          "kind": "String",
+          "value": ""
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "hide-task-view-button",
+      "name": "Hide Task View Button",
+      "description": "Removes the Task View taskbar button.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "ShowTaskViewButton",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "hide-chat-teams-taskbar-icon",
+      "name": "Hide Chat/Teams Taskbar Icon",
+      "description": "Removes Chat from the taskbar.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "TaskbarMn",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "hide-widgets-button",
+      "name": "Hide Widgets Button",
+      "description": "Removes the Widgets button.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+          "name": "TaskbarDa",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-widgets-news-feed",
+      "name": "Disable Widgets / News Feed",
+      "description": "Disables Widgets via policy.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Dsh",
+          "name": "AllowNewsAndInterests",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "hide-taskbar-search-box",
+      "name": "Hide Taskbar Search Box",
+      "description": "Removes the taskbar search box.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Search",
+          "name": "SearchboxTaskbarMode",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-start-menu-suggestions",
+      "name": "Disable Start Menu Suggestions",
+      "description": "Stops ads in Start.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-338388Enabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SystemPaneSuggestionsEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-suggested-content-in-settings",
+      "name": "Disable Suggested Content in Settings",
+      "description": "Stops suggestions in Settings.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-338393Enabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-353694Enabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-353696Enabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-windows-tips-and-welcome-experience",
+      "name": "Disable Windows Tips and Welcome Experience",
+      "description": "Stops tips and welcome experience prompts.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-338389Enabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-310093Enabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SoftLandingEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-lock-screen-tips",
+      "name": "Disable Lock Screen Tips",
+      "description": "Removes tips and trivia from the lock screen.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "RotatingLockScreenOverlayEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SubscribedContent-338387Enabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-silent-app-installs",
+      "name": "Disable Silent App Installs",
+      "description": "Stops Windows silently installing suggested apps.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "SilentInstalledAppsEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "PreInstalledAppsEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "name": "OemPreInstalledAppsEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-consumer-features",
+      "name": "Disable Consumer Features",
+      "description": "Stops auto-installed promoted apps.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent",
+          "name": "DisableWindowsConsumerFeatures",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-spotlight",
+      "name": "Disable Windows Spotlight",
+      "description": "Turns off Spotlight features.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Policies\\Microsoft\\Windows\\CloudContent",
+          "name": "DisableWindowsSpotlightFeatures",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-quick-access-recent-frequent",
+      "name": "Disable Quick Access Recent/Frequent",
+      "description": "Stops showing recent files and frequent folders.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer",
+          "name": "ShowRecent",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer",
+          "name": "ShowFrequent",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-autoplay",
+      "name": "Disable AutoPlay",
+      "description": "Stops AutoPlay popups.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AutoplayHandlers",
+          "name": "DisableAutoplay",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-edge-startup-boost-and-background-mode",
+      "name": "Disable Edge Startup Boost and Background Mode",
+      "description": "Stops Edge running in the background.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
+          "name": "StartupBoostEnabled",
+          "kind": "DWord",
+          "value": 0
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
+          "name": "BackgroundModeEnabled",
+          "kind": "DWord",
+          "value": 0
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-background-apps",
+      "name": "Disable Background Apps",
+      "description": "Stops UWP apps running in the background.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications",
+          "name": "GlobalUserDisabled",
+          "kind": "DWord",
+          "value": 1
+        },
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+          "name": "LetAppsRunInBackground",
+          "kind": "DWord",
+          "value": 2
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-windows-update-auto-restart",
+      "name": "Disable Windows Update Auto-Restart",
+      "description": "No forced restarts while you're signed in.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+          "name": "NoAutoRebootWithLoggedOnUsers",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "exclude-drivers-from-windows-update",
+      "name": "Exclude Drivers from Windows Update",
+      "description": "Stops Windows replacing your GPU/network drivers.",
+      "category": "Windows",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+          "name": "ExcludeWUDriversInQualityUpdate",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-onedrive-sync",
+      "name": "Disable OneDrive Sync",
+      "description": "Turns off OneDrive file sync via policy.",
+      "category": "Windows",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\OneDrive",
+          "name": "DisableFileSyncNGSC",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-notification-center",
+      "name": "Disable Notification Center",
+      "description": "Turns off the notification center.",
+      "category": "Windows",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKCU",
+          "path": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+          "name": "DisableNotificationCenter",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-lock-screen",
+      "name": "Disable Lock Screen",
+      "description": "Skips the lock screen and goes straight to sign-in.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization",
+          "name": "NoLockScreen",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-remote-desktop-connections",
+      "name": "Disable Remote Desktop Connections",
+      "description": "Blocks incoming RDP.",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SYSTEM\\CurrentControlSet\\Control\\Terminal Server",
+          "name": "fDenyTSConnections",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-hide-security-tray-alerts",
+      "name": "Disable Hide Security Tray Alerts",
+      "description": "Hides minor security tray alerts only (Defender stays on).",
+      "category": "Windows",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "registry",
+          "hive": "HKLM",
+          "path": "SOFTWARE\\Policies\\Microsoft\\Windows Defender Security Center\\Notifications",
+          "name": "DisableEnhancedNotifications",
+          "kind": "DWord",
+          "value": 1
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "nvidia-disable-telemetry-scheduled-tasks",
+      "name": "NVIDIA: Disable Telemetry Scheduled Tasks",
+      "description": "Disables NVIDIA telemetry tasks.",
+      "category": "Graphics",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Nvidia",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Get-ScheduledTask -TaskName 'NvTm*' -ErrorAction SilentlyContinue | Disable-ScheduledTask",
+          "revert": "Get-ScheduledTask -TaskName 'NvTm*' -ErrorAction SilentlyContinue | Enable-ScheduledTask"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "nvidia-prefer-maximum-performance-power-mode-global",
+      "name": "NVIDIA: Prefer Maximum Performance Power Mode (Global)",
+      "description": "Applies via NVIDIA profile inspector settings.",
+      "category": "Graphics",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "Nvidia",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "note",
+          "text": "Needs NVIDIA Profile Inspector or driver API. // VERIFY approach"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "amd-disable-auto-update-notifications",
+      "name": "AMD: Disable Auto-Update Notifications",
+      "description": "Turns off AMD Software update popups.",
+      "category": "Graphics",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Amd",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "note",
+          "text": "// VERIFY registry location for current AMD Software version"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "disable-shader-cache-size-limit",
+      "name": "Disable Shader Cache Size Limit",
+      "description": "Stops the DirectX shader cache auto-cleaning.",
+      "category": "Graphics",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "note",
+          "text": "Use DirectX shader cache setting in Windows. // VERIFY"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "clean-user-temp-files",
+      "name": "Clean User Temp Files",
+      "description": "Deletes your temp folder contents.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:TEMP\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-windows-temp-files",
+      "name": "Clean Windows Temp Files",
+      "description": "Deletes C:\\Windows\\Temp contents.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"C:\\Windows\\Temp\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-prefetch-folder",
+      "name": "Clean Prefetch Folder",
+      "description": "Clears Prefetch files.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"C:\\Windows\\Prefetch\\*\" -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-windows-update-download-cache",
+      "name": "Clean Windows Update Download Cache",
+      "description": "Clears downloaded update files.",
+      "category": "Cleanup",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Stop-Service wuauserv -Force; Remove-Item \"C:\\Windows\\SoftwareDistribution\\Download\\*\" -Recurse -Force -ErrorAction SilentlyContinue; Start-Service wuauserv"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "clean-delivery-optimization-cache",
+      "name": "Clean Delivery Optimization Cache",
+      "description": "Clears the delivery optimization cache.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Delete-DeliveryOptimizationCache -Force"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-thumbnail-cache",
+      "name": "Clean Thumbnail Cache",
+      "description": "Clears Explorer thumbnail caches.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db\" -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-directx-shader-cache",
+      "name": "Clean DirectX Shader Cache",
+      "description": "Clears the DirectX shader cache.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\D3DSCache\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-nvidia-shader-cache",
+      "name": "Clean NVIDIA Shader Cache",
+      "description": "Clears NVIDIA DX/GL caches.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\NVIDIA\\DXCache\\*\",\"$env:LOCALAPPDATA\\NVIDIA\\GLCache\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-amd-shader-cache",
+      "name": "Clean AMD Shader Cache",
+      "description": "Clears AMD DX cache.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\AMD\\DxCache\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "empty-recycle-bin",
+      "name": "Empty Recycle Bin",
+      "description": "Empties the Recycle Bin on all drives.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Clear-RecycleBin -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-windows-error-reports",
+      "name": "Clean Windows Error Reports",
+      "description": "Deletes stored error reports.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"C:\\ProgramData\\Microsoft\\Windows\\WER\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-memory-dump-files",
+      "name": "Clean Memory Dump Files",
+      "description": "Deletes crash dumps.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"C:\\Windows\\Minidump\\*\",\"C:\\Windows\\MEMORY.DMP\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-recent-files-list",
+      "name": "Clean Recent Files List",
+      "description": "Clears the recent items list.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:APPDATA\\Microsoft\\Windows\\Recent\\*\" -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-edge-cache",
+      "name": "Clean Edge Cache",
+      "description": "Clears Microsoft Edge cache (close Edge first).",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\Microsoft\\Edge\\User Data\\Default\\Cache\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-chrome-cache",
+      "name": "Clean Chrome Cache",
+      "description": "Clears Chrome cache (close Chrome first).",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\Google\\Chrome\\User Data\\Default\\Cache\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "clean-firefox-cache",
+      "name": "Clean Firefox Cache",
+      "description": "Clears Firefox cache (close Firefox first).",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:LOCALAPPDATA\\Mozilla\\Firefox\\Profiles\\*\\cache2\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "clean-discord-cache",
+      "name": "Clean Discord Cache",
+      "description": "Clears Discord cache (close Discord first).",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "Remove-Item \"$env:APPDATA\\discord\\Cache\\*\",\"$env:APPDATA\\discord\\Code Cache\\*\",\"$env:APPDATA\\discord\\GPUCache\\*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "reset-microsoft-store-cache",
+      "name": "Reset Microsoft Store Cache",
+      "description": "Runs wsreset.",
+      "category": "Cleanup",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "wsreset.exe -q"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "clear-windows-event-logs",
+      "name": "Clear Windows Event Logs",
+      "description": "Clears all event logs.",
+      "category": "Cleanup",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "wevtutil el | ForEach-Object { wevtutil cl $_ }"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "component-store-cleanup",
+      "name": "Component Store Cleanup",
+      "description": "Removes superseded Windows component versions.",
+      "category": "Cleanup",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "None",
+      "kind": "RunOnce",
+      "actions": [
+        {
+          "type": "powershell",
+          "apply": "DISM /Online /Cleanup-Image /StartComponentCleanup"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "limit-max-cpu-to-80-on-battery",
+      "name": "Limit Max CPU to 80% on Battery",
+      "description": "Cooler and longer battery.",
+      "category": "Laptop",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Laptop",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 80",
+          "revert": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "disable-cpu-boost-on-battery",
+      "name": "Disable CPU Boost on Battery",
+      "description": "Saves battery.",
+      "category": "Laptop",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Laptop",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 0",
+          "revert": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 1"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "wi-fi-maximum-power-saving-on-battery",
+      "name": "Wi-Fi Maximum Power Saving on Battery",
+      "description": "Longer battery life.",
+      "category": "Laptop",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Laptop",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETDCVALUEINDEX SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3",
+          "revert": "/SETDCVALUEINDEX SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 1"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "turn-off-disk-sooner-on-battery",
+      "name": "Turn Off Disk Sooner on Battery",
+      "description": "Spins down hard disks after 5 min on battery.",
+      "category": "Laptop",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Laptop",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_DISK DISKIDLE 300",
+          "revert": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_DISK DISKIDLE 1200"
+        }
+      ],
+      "tier": "Free"
+    },
+    {
+      "id": "pcie-maximum-power-saving-on-battery",
+      "name": "PCIe Maximum Power Saving on Battery",
+      "description": "Saves battery.",
+      "category": "Laptop",
+      "risk": "Medium",
+      "requiresReboot": false,
+      "requires": "Laptop",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "powercfg",
+          "apply": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_PCIEXPRESS ASPM 2",
+          "revert": "/SETDCVALUEINDEX SCHEME_CURRENT SUB_PCIEXPRESS ASPM 1"
+        }
+      ],
+      "tier": "Premium"
+    },
+    {
+      "id": "performance-mode-when-plugged-in",
+      "name": "Performance Mode When Plugged In",
+      "description": "Applies Ultimate Performance on AC and Balanced on battery.",
+      "category": "Laptop",
+      "risk": "Low",
+      "requiresReboot": false,
+      "requires": "Laptop",
+      "kind": "Toggle",
+      "actions": [
+        {
+          "type": "note",
+          "text": "Implement with a PowerSettingChange listener that switches plan on AC/DC change."
+        }
+      ],
+      "tier": "Premium"
+    }
+  ]
+}
