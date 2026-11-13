@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using System.Globalization;
 using System.IO;
 using System.Text.Json;
 
@@ -11,13 +12,35 @@ internal sealed record TweakDefinition(
     string Name,
     string Category,
     string Description,
-    string Benefit,
-    string Tradeoff,
+    string Risk,
     bool RestartRequired,
-    IReadOnlyList<RegistrySetting> Settings);
+    string Requires,
+    string Kind,
+    string Tier,
+    IReadOnlyList<RegistrySetting> Settings,
+    string? UnsupportedReason);
 
 internal sealed class TweakService
 {
+    private const int MaximumCatalogBytes = 1_000_000;
+    private static readonly string[] AllowedRegistryRoots =
+    [
+        @"Software\Microsoft\Windows\CurrentVersion",
+        @"Software\Microsoft\GameBar",
+        @"Software\Microsoft\InputPersonalization",
+        @"Software\Microsoft\DirectX\UserGpuPreferences",
+        @"Software\Microsoft\Siuf\Rules",
+        @"Software\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy",
+        @"Software\Microsoft\Windows\DWM",
+        @"System\GameConfigStore",
+        @"Control Panel\Desktop",
+        @"Control Panel\Mouse",
+        @"Control Panel\Keyboard",
+        @"Control Panel\Accessibility",
+        @"Control Panel\Cursors",
+        @"Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32"
+    ];
+
     private readonly string _directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RISE");
     private readonly string _backupFile;
     private readonly string _logFile;
@@ -28,43 +51,71 @@ internal sealed class TweakService
         Directory.CreateDirectory(_directory);
         _backupFile = Path.Combine(_directory, "registry-backups.json");
         _logFile = Path.Combine(_directory, "activity.log");
+        CatalogPath = Path.Combine(_directory, "Tweaks.json");
+        EnsureCatalogExists(CatalogPath);
+        Definitions = LoadUserCatalog();
         _backups = LoadBackups();
     }
 
-    public static IReadOnlyList<TweakDefinition> Definitions { get; } =
-    [
-        new("suggestions", "Reduce Windows suggestions", "Windows", "Turns off consumer suggestion content for the current Windows user.", "Fewer promotional suggestions in Windows surfaces.", "Windows may show less contextual setup guidance.", false, [Setting(@"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "SystemPaneSuggestionsEnabled", 0, RegistryValueKind.DWord)]),
-        new("background-apps", "Restrict background apps", "Windows", "Disables background app execution where the Windows setting is honored.", "May reduce background activity for supported Store apps.", "Background updates and notifications may be delayed.", false, [Setting(@"Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications", "GlobalUserDisabled", 1, RegistryValueKind.DWord)]),
-        new("game-dvr", "Disable background Game DVR capture", "Gaming", "Disables background game recording for the current user.", "Prevents background recording overhead when it is not wanted.", "Background clips and capture shortcuts will not work.", false, [Setting(@"System\GameConfigStore", "GameDVR_Enabled", 0, RegistryValueKind.DWord)]),
-        new("game-mode", "Enable Windows Game Mode", "Gaming", "Enables Windows Game Mode for the current user.", "Lets Windows apply its built-in gaming policy.", "Windows controls scheduling behavior while a game is detected.", false, [Setting(@"Software\Microsoft\GameBar", "AutoGameModeEnabled", 1, RegistryValueKind.DWord), Setting(@"Software\Microsoft\GameBar", "AllowAutoGameMode", 1, RegistryValueKind.DWord)]),
-        new("mouse-acceleration", "Turn off mouse acceleration", "Input", "Disables Enhance pointer precision for the current user.", "Provides a more consistent cursor response to the same physical mouse movement.", "Some users prefer pointer acceleration.", false, [Setting(@"Control Panel\Mouse", "MouseSpeed", "0", RegistryValueKind.String), Setting(@"Control Panel\Mouse", "MouseThreshold1", "0", RegistryValueKind.String), Setting(@"Control Panel\Mouse", "MouseThreshold2", "0", RegistryValueKind.String)]),
-        new("advertising-id", "Disable the advertising ID", "Privacy", "Disables the Windows advertising ID for the current user.", "Reduces use of the Windows advertising identifier in apps.", "Personalized app advertising may be reduced.", false, [Setting(@"Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo", "Enabled", 0, RegistryValueKind.DWord)]),
-        new("input-personalization", "Restrict input data collection", "Privacy", "Restricts optional typing and inking data collection for the current user.", "Reduces optional collection used for personalized input features.", "Personalized typing and inking suggestions may be unavailable.", false, [Setting(@"Software\Microsoft\InputPersonalization", "RestrictImplicitTextCollection", 1, RegistryValueKind.DWord), Setting(@"Software\Microsoft\InputPersonalization", "RestrictImplicitInkCollection", 1, RegistryValueKind.DWord)]),
-        new("window-animation", "Reduce window animations", "Accessibility", "Turns off the legacy window minimize/maximize animation for the current user.", "Reduces one visual transition.", "Window transitions will be less animated.", false, [Setting(@"Control Panel\Desktop\WindowMetrics", "MinAnimate", "0", RegistryValueKind.String)]),
-        new("search-highlights", "Turn off search highlights", "Windows", "Turns off search box highlight content for the current user.", "Reduces promoted and trending content in Windows Search.", "Search highlights and related content are hidden.", false, [Setting(@"Software\Microsoft\Windows\CurrentVersion\SearchSettings", "IsDynamicSearchBoxEnabled", 0, RegistryValueKind.DWord)]),
-        new("widgets", "Turn off taskbar widgets", "Windows", "Disables the Windows taskbar Widgets entry for the current user.", "Removes the Widgets taskbar entry and its feed access point.", "Widgets are not available from the taskbar.", false, [Setting(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "TaskbarDa", 0, RegistryValueKind.DWord)])
-    ];
+    public string CatalogPath { get; }
+    public IReadOnlyList<TweakDefinition> Definitions { get; }
+    public int FreeCatalogCount => Definitions.Count(t => t.Tier == "Free");
+    public int PremiumCatalogCount => Definitions.Count(t => t.Tier == "Premium");
+    public int SupportedCount => Definitions.Count(CanApply);
+    public int SupportedFreeCount => Definitions.Count(t => t.Tier == "Free" && IsSupported(t));
+
+    public static bool IsDeveloperBuild
+    {
+        get
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
+
+    public bool CanApply(TweakDefinition tweak) =>
+        IsSupported(tweak) && (tweak.Tier == "Free" || IsDeveloperBuild && tweak.Tier == "Premium");
+
+    public bool IsApplied(TweakDefinition tweak) =>
+        CanApply(tweak) && tweak.Settings.All(setting => Equals(ReadCurrent(setting), setting.Value));
 
     public string GetStatus(TweakDefinition tweak)
     {
-        var applied = tweak.Settings.All(setting => Equals(ReadCurrent(setting), setting.Value));
-        return applied ? "Applied" : HasBackup(tweak) ? "Changed; original value saved" : "Not applied";
+        if (!CanApply(tweak))
+            return tweak.UnsupportedReason ?? (tweak.Tier == "Premium"
+                ? "Premium entries are not enabled in the public build."
+                : "This action is not supported in this build.");
+
+        if (IsApplied(tweak))
+            return HasBackup(tweak) ? "Applied · original values backed up" : "Current values already match";
+        return HasBackup(tweak) ? "Changed · original values backed up" : "Not applied";
     }
 
     public bool HasBackup(TweakDefinition tweak) => tweak.Settings.Any(setting => _backups.ContainsKey(Key(setting)));
 
     public void Apply(TweakDefinition tweak)
     {
+        if (!CanApply(tweak))
+            throw new InvalidOperationException(GetStatus(tweak));
+
         foreach (var setting in tweak.Settings)
         {
             var key = Key(setting);
-            if (!_backups.ContainsKey(key))
+            if (_backups.ContainsKey(key)) continue;
+
+            using var registry = Registry.CurrentUser.OpenSubKey(setting.SubKey, writable: false);
+            var existing = registry?.GetValue(setting.Name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+            if (existing is null)
             {
-                using var registry = Registry.CurrentUser.OpenSubKey(setting.SubKey, writable: false);
-                var existing = registry?.GetValue(setting.Name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
-                _backups[key] = existing is null
-                    ? new SavedRegistryValue(false, null, null)
-                    : new SavedRegistryValue(true, existing.ToString(), (int)(registry!.GetValueKind(setting.Name)));
+                _backups[key] = new SavedRegistryValue(false, null, null);
+            }
+            else
+            {
+                var kind = registry!.GetValueKind(setting.Name);
+                _backups[key] = new SavedRegistryValue(true, EncodeValue(existing, kind), (int)kind);
             }
         }
         SaveBackups();
@@ -74,16 +125,16 @@ internal sealed class TweakService
             using var registry = Registry.CurrentUser.CreateSubKey(setting.SubKey, writable: true);
             registry.SetValue(setting.Name, setting.Value, setting.Kind);
         }
-        Log($"Applied tweak: {tweak.Name}");
+        Log($"Applied tweak: {tweak.Id}");
     }
 
     public void Restore(TweakDefinition tweak)
     {
+        var restored = 0;
         foreach (var setting in tweak.Settings)
         {
             var key = Key(setting);
-            if (!_backups.TryGetValue(key, out var original))
-                throw new InvalidOperationException($"RISE has no saved original value for {setting.Name}; it was not changed.");
+            if (!_backups.TryGetValue(key, out var original)) continue;
 
             using (var registry = Registry.CurrentUser.CreateSubKey(setting.SubKey, writable: true))
             {
@@ -93,9 +144,13 @@ internal sealed class TweakService
                     registry.DeleteValue(setting.Name, throwOnMissingValue: false);
             }
             _backups.Remove(key);
+            restored++;
         }
+
+        if (restored == 0) return;
+
         SaveBackups();
-        Log($"Restored tweak: {tweak.Name}");
+        Log($"Restored tweak: {tweak.Id}");
     }
 
     public IReadOnlyList<string> ReadLog()
@@ -104,16 +159,176 @@ internal sealed class TweakService
         catch (IOException) { return ["Activity log is unavailable."]; }
     }
 
-    private static RegistrySetting Setting(string path, string name, object value, RegistryValueKind kind) => new(path, name, value, kind);
-    private static string Key(RegistrySetting setting) => $"{setting.SubKey}|{setting.Name}";
+    private static bool IsSupported(TweakDefinition tweak) =>
+        tweak.UnsupportedReason is null && tweak.Settings.Count > 0;
 
-    private static object? ReadCurrent(RegistrySetting setting)
+    private static IReadOnlyList<TweakDefinition> LoadDefinitions(string path)
     {
-        using var key = Registry.CurrentUser.OpenSubKey(setting.SubKey);
-        return key?.GetValue(setting.Name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+        var info = new FileInfo(path);
+        if (info.Length > MaximumCatalogBytes)
+            throw new InvalidDataException("The RISE tweak catalog is too large to load.");
+
+        CatalogDocument catalog;
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            catalog = JsonSerializer.Deserialize<CatalogDocument>(File.ReadAllText(path), options)
+                ?? throw new InvalidDataException("The RISE tweak catalog is empty.");
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidDataException("The RISE tweak catalog contains invalid JSON.", ex);
+        }
+
+        var entries = catalog.Tweaks;
+        if (catalog.Version != 1 || entries is null || entries.Count > 500)
+            throw new InvalidDataException("The RISE tweak catalog version or entry count is not supported.");
+
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var definitions = new List<TweakDefinition>(entries.Count);
+        foreach (var entry in entries)
+        {
+            if (!IsValidEntry(entry) || !ids.Add(entry.Id))
+                throw new InvalidDataException("The RISE tweak catalog contains an invalid entry or duplicate ID.");
+
+            var settings = new List<RegistrySetting>();
+            string? unsupportedReason = ValidateForExecution(entry, settings);
+            definitions.Add(new TweakDefinition(
+                entry.Id,
+                entry.Name,
+                entry.Category,
+                entry.Description,
+                entry.Risk,
+                entry.RequiresReboot,
+                entry.Requires,
+                entry.Kind,
+                entry.Tier,
+                settings,
+                unsupportedReason));
+        }
+
+        return definitions.AsReadOnly();
     }
 
-    private void SaveBackups() => File.WriteAllText(_backupFile, JsonSerializer.Serialize(_backups, new JsonSerializerOptions { WriteIndented = true }));
+    private static bool IsValidEntry(CatalogEntry? entry) =>
+        entry is not null
+        && IsCatalogText(entry.Id, 1, 100)
+        && entry.Id.All(c => char.IsAsciiLetterOrDigit(c) || c == '-')
+        && IsCatalogText(entry.Name, 1, 160)
+        && IsCatalogText(entry.Category, 1, 80)
+        && IsCatalogText(entry.Description, 1, 1000)
+        && IsCatalogText(entry.Risk, 1, 20)
+        && IsCatalogText(entry.Requires, 1, 100)
+        && IsCatalogText(entry.Kind, 1, 30)
+        && entry.Tier is "Free" or "Premium"
+        && entry.Actions is { Count: <= 20 } actions
+        && actions.All(action => action is not null);
+
+    private static bool IsCatalogText(string? value, int minimum, int maximum) =>
+        value is not null && value.Length >= minimum && value.Length <= maximum;
+
+    private static string? ValidateForExecution(CatalogEntry entry, List<RegistrySetting> settings)
+    {
+        var actions = entry.Actions;
+        if (actions is null)
+            return "This catalog entry has an invalid action list.";
+        if (entry.Risk != "Low")
+            return $"Catalog risk is {entry.Risk}; only Low-risk actions are enabled.";
+        if (entry.Requires != "None")
+            return $"Requires {entry.Requires}; hardware-specific actions are not enabled.";
+        if (entry.Kind != "Toggle")
+            return $"{entry.Kind} actions are not enabled.";
+        if (actions.Count == 0)
+            return "This catalog entry has no executable action.";
+
+        foreach (var action in actions)
+        {
+            if (action is null)
+                return "This catalog entry contains an invalid action.";
+            if (!string.Equals(action.Type, "registry", StringComparison.OrdinalIgnoreCase))
+                return $"Action type '{action.Type}' is not enabled. Shell commands, services, network changes, and powercfg actions are never run from the catalog.";
+            if (!string.Equals(action.Hive, "HKCU", StringComparison.OrdinalIgnoreCase))
+                return "Only current-user registry values are supported; administrator-level writes are not enabled.";
+            if (string.IsNullOrWhiteSpace(action.Path) || !IsAllowedRegistryPath(action.Path))
+                return "The registry path is outside the supported current-user settings.";
+            if (string.IsNullOrWhiteSpace(action.Name) || action.Name.Length > 163)
+                return "The registry value name is invalid.";
+
+            var setting = ParseRegistrySetting(action);
+            if (setting is null)
+                return "Only validated DWORD and String values are supported.";
+            settings.Add(setting);
+        }
+
+        return entry.Tier == "Premium" && !IsDeveloperBuild
+            ? "Premium entries are visible in the catalog but are not enabled in the public build."
+            : null;
+    }
+
+    private static bool IsAllowedRegistryPath(string path)
+    {
+        if (path.Length > 512 || path.Contains('/') || path.Contains(':')
+            || path.Split('\\').Any(segment => segment is "" or "." or ".."))
+            return false;
+        if (path.Split('\\').Any(segment => segment.Equals("Run", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("RunOnce", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("Services", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("Tasks", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("Policies", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("CapabilityAccessManager", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("Winlogon", StringComparison.OrdinalIgnoreCase)
+            || segment.Equals("AppInit_DLLs", StringComparison.OrdinalIgnoreCase)))
+            return false;
+
+        return AllowedRegistryRoots.Any(root =>
+            path.Equals(root, StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith(root + @"\", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static RegistrySetting? ParseRegistrySetting(CatalogAction action)
+    {
+        if (string.Equals(action.Kind, "DWord", StringComparison.OrdinalIgnoreCase)
+            && action.Value.ValueKind == JsonValueKind.Number
+            && action.Value.TryGetInt32(out var dword))
+            return new RegistrySetting(action.Path!, action.Name!, dword, RegistryValueKind.DWord);
+
+        if (string.Equals(action.Kind, "String", StringComparison.OrdinalIgnoreCase)
+            && action.Value.ValueKind == JsonValueKind.String
+            && action.Value.GetString() is { } text
+            && text.Length <= 4096)
+            return new RegistrySetting(action.Path!, action.Name!, text, RegistryValueKind.String);
+
+        return null;
+    }
+
+    private static void EnsureCatalogExists(string catalogPath)
+    {
+        if (File.Exists(catalogPath)) return;
+        var bundledPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Tweaks.json");
+        if (!File.Exists(bundledPath))
+            throw new FileNotFoundException("The bundled RISE tweak catalog is missing.", bundledPath);
+        File.Copy(bundledPath, catalogPath);
+    }
+
+    private IReadOnlyList<TweakDefinition> LoadUserCatalog()
+    {
+        try
+        {
+            return LoadDefinitions(CatalogPath);
+        }
+        catch (InvalidDataException ex)
+        {
+            var recoveryPath = Path.Combine(_directory, $"Tweaks.invalid-{Guid.NewGuid():N}.json");
+            File.Move(CatalogPath, recoveryPath);
+            var bundledPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Tweaks.json");
+            File.Copy(bundledPath, CatalogPath, overwrite: true);
+            Log($"Invalid catalog preserved at {Path.GetFileName(recoveryPath)}; restored the bundled catalog. {ex.Message}");
+            return LoadDefinitions(CatalogPath);
+        }
+    }
+
+    private void SaveBackups() =>
+        File.WriteAllText(_backupFile, JsonSerializer.Serialize(_backups, new JsonSerializerOptions { WriteIndented = true }));
 
     private Dictionary<string, SavedRegistryValue> LoadBackups()
     {
@@ -124,8 +339,64 @@ internal sealed class TweakService
 
     private void Log(string message) => File.AppendAllText(_logFile, $"{DateTimeOffset.Now:O}  {message}{Environment.NewLine}");
 
+    private static string Key(RegistrySetting setting) => $"{setting.SubKey}|{setting.Name}";
+
+    private static object? ReadCurrent(RegistrySetting setting)
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(setting.SubKey);
+        return key?.GetValue(setting.Name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+    }
+
+    private static string EncodeValue(object value, RegistryValueKind kind) =>
+        kind switch
+        {
+            RegistryValueKind.DWord or RegistryValueKind.QWord => Convert.ToString(value, CultureInfo.InvariantCulture) ?? "0",
+            RegistryValueKind.String or RegistryValueKind.ExpandString => (string)value,
+            RegistryValueKind.Binary or RegistryValueKind.None => Convert.ToBase64String((byte[])value),
+            RegistryValueKind.MultiString => JsonSerializer.Serialize((string[])value),
+            _ => throw new InvalidOperationException($"Registry value type '{kind}' cannot be backed up safely.")
+        };
+
     private static object ParseValue(string? value, RegistryValueKind kind) =>
-        kind == RegistryValueKind.DWord && int.TryParse(value, out var number) ? number : value ?? string.Empty;
+        kind switch
+        {
+            RegistryValueKind.DWord when int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) => number,
+            RegistryValueKind.QWord when long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) => number,
+            RegistryValueKind.String or RegistryValueKind.ExpandString => value ?? string.Empty,
+            RegistryValueKind.Binary or RegistryValueKind.None => Convert.FromBase64String(value ?? string.Empty),
+            RegistryValueKind.MultiString => JsonSerializer.Deserialize<string[]>(value ?? "[]") ?? [],
+            _ => throw new InvalidOperationException($"The saved registry value type '{kind}' is invalid.")
+        };
+
+    private sealed class CatalogDocument
+    {
+        public int Version { get; init; }
+        public List<CatalogEntry>? Tweaks { get; init; } = [];
+    }
+
+    private sealed class CatalogEntry
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public string Category { get; init; } = string.Empty;
+        public string Risk { get; init; } = string.Empty;
+        public bool RequiresReboot { get; init; }
+        public string Requires { get; init; } = string.Empty;
+        public string Kind { get; init; } = string.Empty;
+        public string Tier { get; init; } = string.Empty;
+        public List<CatalogAction>? Actions { get; init; } = [];
+    }
+
+    private sealed class CatalogAction
+    {
+        public string Type { get; init; } = string.Empty;
+        public string? Hive { get; init; }
+        public string? Path { get; init; }
+        public string? Name { get; init; }
+        public string? Kind { get; init; }
+        public JsonElement Value { get; init; }
+    }
 
     private sealed record SavedRegistryValue(bool Exists, string? Value, int? Kind);
 }
