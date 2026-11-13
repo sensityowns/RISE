@@ -6,13 +6,23 @@
         <DrawingImage x:Key="RiseIcon">
             <DrawingImage.Drawing>
                 <DrawingGroup>
-                    <GeometryDrawing Brush="#FFFF762E">
+                    <GeometryDrawing Brush="#FF101114">
                         <GeometryDrawing.Geometry>
-                            <RectangleGeometry Rect="0,0,64,64" RadiusX="14" RadiusY="14"/>
+                            <RectangleGeometry Rect="0,0,64,64" RadiusX="16" RadiusY="16"/>
                         </GeometryDrawing.Geometry>
                     </GeometryDrawing>
-                    <GeometryDrawing Brush="#FF111114" Geometry="M18,12 L39,12 C51,12 57,18 57,28 C57,35 53,40 46,42 L58,53 L43,53 L33,43 L29,43 L29,53 L18,53 Z"/>
-                    <GeometryDrawing Brush="#FFFF762E" Geometry="M29,21 L29,34 L39,34 C44,34 47,32 47,27 C47,23 44,21 39,21 Z"/>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FFFF762E" Thickness="4" StartLineCap="Round" EndLineCap="Round" LineJoin="Round"/>
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M 10,44 L 32,14 L 54,44"/>
+                                <PathGeometry Figures="M 21,44 L 36,25 L 49,44"/>
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF101114" Geometry="M 32,29 L 41,41 L 23,41 Z"/>
                 </DrawingGroup>
             </DrawingImage.Drawing>
         </DrawingImage>
