@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Replace the app's lettermark with an orange and black angular peak mark based on the provided logo.
+- Add search and category filters to the tweak library; results and counts reflect the implemented tweaks.
+- Keep account authentication and Pro/Developer entitlement features explicitly unavailable rather than displaying a fake sign-in flow.
+
 ## 0.3.0
 
 - Added a current-user startup manager that can disable and restore registry `Run` entries while preserving their values.

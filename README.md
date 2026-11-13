@@ -5,13 +5,15 @@
 
 RISE is an open-source Windows 10/11 desktop utility built with .NET 8 and WPF. It brings system information, reversible user-level settings, game discovery and launching, process-priority profiles, and Windows-native network and maintenance tools together in one app.
 
-**Download:** [RISE 0.3.0 Windows preview](https://github.com/sensityowns/RISE/releases/tag/v0.3.0) · **Website:** [risetweaks.netlify.app](https://risetweaks.netlify.app/) · **Community:** [Discord](https://discord.com/invite/qfqhJRv8m)
+**Download:** [RISE 0.4.0 Windows preview](https://github.com/sensityowns/RISE/releases/tag/v0.4.0) · **Website:** [risetweaks.netlify.app](https://risetweaks.netlify.app/) · **Community:** [Discord](https://discord.com/invite/qfqhJRv8m)
 
 ## Features
 
 - Dark RISE-branded interface with a launch animation and animated page transitions.
 - Live Windows version/build, CPU, display-driver GPU name when available, memory, system-drive space, architecture, battery status, active power scheme, and network availability.
 - Ten individually implemented, documented, reversible per-user registry tweaks. This build provides 10 tweaks; it does not claim the requested 130 Free or 300 Pro tweaks. Original values are saved before changes; individual and bulk restore are available. RISE does not disable Windows services or security protections.
+- Search and category filters for the actual tweak inventory; the displayed total comes from the implemented definitions.
+- Updated the app logo to match the supplied angular peak mark in orange and black.
 - Detection of 24 game profiles in common installation folders, with manual executable selection and launch. Steam library folders are read from the local Steam configuration.
 - Light, Balanced, and Extreme launch profiles request Normal, AboveNormal, and High process priority, respectively. RISE never requests real-time priority or terminates other processes.
 - Live CPU-time and working-set readings for the process RISE launched. System-wide CPU usage is reported separately.

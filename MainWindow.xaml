@@ -22,10 +22,7 @@
             <DockPanel Margin="16,18">
                 <StackPanel DockPanel.Dock="Top">
                     <StackPanel Orientation="Horizontal" Margin="6,5,0,28">
-                        <Border Width="38" Height="38" Background="#FFFF762E" CornerRadius="11">
-                            <TextBlock Text="R" Foreground="#FF111114" FontSize="26" FontWeight="Black"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                        <Image Width="38" Height="38" Source="{StaticResource RiseIcon}" Stretch="Uniform"/>
                         <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="RISE" FontSize="19" FontWeight="Bold"/>
                             <TextBlock Text="PERFORMANCE SUITE" FontSize="9" Foreground="{StaticResource MutedBrush}"/>
@@ -60,9 +57,7 @@
             <ContentControl x:Name="PageHost" Grid.Row="1"/>
             <Grid x:Name="Splash" Grid.RowSpan="2" Background="#FF101114">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Border Width="84" Height="84" CornerRadius="25" Background="{StaticResource AccentBrush}" HorizontalAlignment="Center">
-                        <TextBlock Text="R" Foreground="#FF111114" FontSize="58" FontWeight="Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    <Image Width="84" Height="84" Source="{StaticResource RiseIcon}" Stretch="Uniform" HorizontalAlignment="Center"/>
                     <TextBlock Text="RISE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,18,0,4"/>
                     <TextBlock Text="PERFORMANCE SUITE" FontSize="10" Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center"/>
                     <ProgressBar Width="120" Height="3" IsIndeterminate="True" Foreground="{StaticResource AccentBrush}" Background="#FF292B31" BorderThickness="0" Margin="0,24,0,0"/>

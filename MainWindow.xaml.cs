@@ -51,7 +51,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _settings = _settingsService.Load();
-        var appVersion = GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0";
+        var appVersion = GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0";
         Title = $"RISE · FREE · v{appVersion}";
         ApplyAccent(_settings.Accent);
         _gameCatalog.Detect();
@@ -149,7 +149,7 @@ public partial class MainWindow : Window
         _homeDetails.Clear();
         _homeBars.Clear();
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Your system, at a glance.", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0"} · Live readings from Windows."));
+        page.Children.Add(WelcomeBlock("Your system, at a glance.", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0"} · Live readings from Windows."));
 
         var overview = new UniformGrid { Columns = 4, Margin = new Thickness(0, 0, 0, 16) };
         overview.Children.Add(CreateMetricCard("PROCESSOR", _snapshot.Cpu, $"{_snapshot.CpuPercent:0}% system use", _snapshot.CpuPercent / 100));
@@ -210,13 +210,65 @@ public partial class MainWindow : Window
     private UIElement BuildTweaks()
     {
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Tweak library", $"{TweakService.Definitions.Count} documented, reversible per-user settings. No system services or security protections are disabled."));
-        foreach (var category in TweakService.Definitions.GroupBy(t => t.Category))
+        page.Children.Add(WelcomeBlock("Tweak library", $"{TweakService.Definitions.Count} implemented, reversible per-user tweaks. Search and filter the settings available in this build. No system services or security protections are disabled."));
+        var filters = new DockPanel { Margin = new Thickness(0, 0, 0, 12) };
+        var search = new TextBox
         {
-            page.Children.Add(SectionTitle(category.Key));
-            foreach (var tweak in category)
-                page.Children.Add(BuildTweakCard(tweak));
+            MinWidth = 250,
+            Padding = new Thickness(10, 7, 10, 7),
+            Background = (Brush)FindResource("PanelBrush"),
+            Foreground = Brushes.WhiteSmoke,
+            BorderBrush = (Brush)FindResource("BorderBrush"),
+            BorderThickness = new Thickness(1),
+            ToolTip = "Search tweak names, categories, and descriptions"
+        };
+        var categoryFilter = new ComboBox
+        {
+            Width = 180,
+            Margin = new Thickness(8, 0, 0, 0),
+            Background = (Brush)FindResource("PanelBrush"),
+            Foreground = Brushes.WhiteSmoke
+        };
+        categoryFilter.Items.Add("All categories");
+        foreach (var category in TweakService.Definitions.Select(t => t.Category).Distinct().OrderBy(c => c))
+            categoryFilter.Items.Add(category);
+        categoryFilter.SelectedIndex = 0;
+        filters.Children.Add(search);
+        DockPanel.SetDock(categoryFilter, Dock.Right);
+        filters.Children.Add(categoryFilter);
+        page.Children.Add(filters);
+
+        var results = new StackPanel();
+        void RefreshResults()
+        {
+            results.Children.Clear();
+            var query = search.Text.Trim();
+            var selectedCategory = categoryFilter.SelectedItem?.ToString();
+            var matches = TweakService.Definitions.Where(t =>
+                (selectedCategory == "All categories" || t.Category == selectedCategory)
+                && (string.IsNullOrWhiteSpace(query)
+                    || t.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || t.Category.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || t.Description.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || t.Benefit.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || t.Tradeoff.Contains(query, StringComparison.OrdinalIgnoreCase)))
+                .ToArray();
+            if (matches.Length == 0)
+            {
+                results.Children.Add(Body("No implemented tweaks match this search.", 12));
+                return;
+            }
+            foreach (var category in matches.GroupBy(t => t.Category))
+            {
+                results.Children.Add(SectionTitle(category.Key));
+                foreach (var tweak in category)
+                    results.Children.Add(BuildTweakCard(tweak));
+            }
         }
+        search.TextChanged += (_, _) => RefreshResults();
+        categoryFilter.SelectionChanged += (_, _) => RefreshResults();
+        RefreshResults();
+        page.Children.Add(results);
         return ScrollPage(page);
     }
 
@@ -463,7 +515,7 @@ public partial class MainWindow : Window
     private UIElement BuildSettings()
     {
         var page = NewPage();
-        page.Children.Add(WelcomeBlock("Settings & support", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0"} · Settings are stored under your local app data."));
+        page.Children.Add(WelcomeBlock("Settings & support", $"RISE FREE · {TweakService.Definitions.Count} implemented tweaks · v{GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0"} · Settings are stored under your local app data."));
 
         var accentPanel = new StackPanel();
         accentPanel.Children.Add(new TextBlock { Text = "Accent colour", FontWeight = FontWeights.SemiBold });
@@ -494,11 +546,11 @@ public partial class MainWindow : Window
         startupPanel.Children.Add(animation);
         page.Children.Add(Card("APPLICATION", startupPanel, new Thickness(0, 0, 0, 8)));
 
-        page.Children.Add(ActionButton("Sign in / Get RISE Pro · official website", () => OpenUrl("https://risetweaks.netlify.app/"), accent: true, margin: new Thickness(0, 0, 0, 8)));
+        page.Children.Add(ActionButton("RISE Pro information · official website", () => OpenUrl("https://risetweaks.netlify.app/"), accent: true, margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(Body("RISE does not currently have desktop authentication or a subscription-verification backend. The app cannot verify or grant Pro entitlements.", 12));
         page.Children.Add(ActionButton("Discord support & community", () => OpenUrl("https://discord.com/invite/qfqhJRv8m"), margin: new Thickness(0, 0, 0, 8)));
         page.Children.Add(ActionButton("Official website", () => OpenUrl("https://risetweaks.netlify.app/"), margin: new Thickness(0, 0, 0, 8)));
-        page.Children.Add(Body($"RISE version {GetType().Assembly.GetName().Version?.ToString(3) ?? "0.2.0"} · no password or account data is stored locally.", 12));
+        page.Children.Add(Body($"RISE version {GetType().Assembly.GetName().Version?.ToString(3) ?? "0.4.0"} · no password or account data is stored locally.", 12));
         page.Children.Add(Body("Automatic update checking, tray minimization, account/license validation, and developer diagnostics are not implemented in this build.", 12));
         return ScrollPage(page);
     }
